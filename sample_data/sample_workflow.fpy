@@ -1,0 +1,100 @@
+{
+  "name": "Automated Customer Pipeline",
+  "version": "1.0.0",
+  "nodes": [
+    {
+      "id": "df1e108d-466c-48ae-b200-32049c395ae0",
+      "node_type": "CSVReader",
+      "custom_name": "CSVReader",
+      "position": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "params": {
+        "file_path": "C:\\Users\\Bisag\\Videos\\test\\sample_data\\customers.csv",
+        "delimiter": ",",
+        "has_header": true,
+        "ignore_errors": true
+      }
+    },
+    {
+      "id": "c883d554-e16d-4acd-a8ca-fd6a1d12d4d3",
+      "node_type": "Tester",
+      "custom_name": "Tester",
+      "position": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "params": {
+        "attribute": "status",
+        "operator": "=",
+        "test_value": "active"
+      }
+    },
+    {
+      "id": "b29e2e37-cd0c-424f-879a-ea58a0004f26",
+      "node_type": "VertexCreator",
+      "custom_name": "VertexCreator",
+      "position": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "params": {
+        "x_attribute": "lon",
+        "y_attribute": "lat",
+        "crs": "EPSG:4326"
+      }
+    },
+    {
+      "id": "57141ac5-86df-4468-88f6-66081d674d83",
+      "node_type": "Bufferer",
+      "custom_name": "Bufferer",
+      "position": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "params": {
+        "buffer_distance": 0.25,
+        "resolution": 16
+      }
+    },
+    {
+      "id": "fba5b6f5-c9ad-418e-9bff-188e85d4b19b",
+      "node_type": "GeoJSONWriter",
+      "custom_name": "GeoJSONWriter",
+      "position": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "params": {
+        "file_path": "C:\\Users\\Bisag\\Videos\\test\\sample_data\\test_output.geojson"
+      }
+    }
+  ],
+  "connections": [
+    {
+      "from_node_id": "df1e108d-466c-48ae-b200-32049c395ae0",
+      "from_port": "Output",
+      "to_node_id": "c883d554-e16d-4acd-a8ca-fd6a1d12d4d3",
+      "to_port": "Input"
+    },
+    {
+      "from_node_id": "c883d554-e16d-4acd-a8ca-fd6a1d12d4d3",
+      "from_port": "Passed",
+      "to_node_id": "b29e2e37-cd0c-424f-879a-ea58a0004f26",
+      "to_port": "Input"
+    },
+    {
+      "from_node_id": "b29e2e37-cd0c-424f-879a-ea58a0004f26",
+      "from_port": "Output",
+      "to_node_id": "57141ac5-86df-4468-88f6-66081d674d83",
+      "to_port": "Input"
+    },
+    {
+      "from_node_id": "57141ac5-86df-4468-88f6-66081d674d83",
+      "from_port": "Output",
+      "to_node_id": "fba5b6f5-c9ad-418e-9bff-188e85d4b19b",
+      "to_port": "Input"
+    }
+  ]
+}

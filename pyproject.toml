@@ -1,0 +1,61 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "open-fme"
+version = "1.0.0"
+description = "open-FME Workbench: Open-source visual node-based Spatial & Tabular ETL pipeline automation engine for Python."
+readme = "README.md"
+authors = [
+    { name = "open-FME Contributors" }
+]
+license = { text = "MIT" }
+requires-python = ">=3.10"
+keywords = [
+    "fme",
+    "spatial-etl",
+    "etl",
+    "gis",
+    "geopandas",
+    "polars",
+    "pyqt6",
+    "workflow",
+    "pipeline-automation",
+    "geospatial"
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: GIS",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "PyQt6>=6.5.0",
+    "polars>=0.20.0",
+    "geopandas>=0.14.0",
+    "shapely>=2.0.0",
+    "pyproj>=3.5.0",
+    "numpy>=1.24.0",
+    "openpyxl>=3.1.0",
+    "pyarrow>=14.0.0",
+    "requests>=2.28.0",
+    "scipy>=1.10.0",
+]
+
+[project.optional-dependencies]
+raster = [
+    "rasterio>=1.3.0",
+]
+
+[project.scripts]
+open-fme = "pyfme.cli:main"
+open-fme-gui = "main:main"

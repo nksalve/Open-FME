@@ -1,0 +1,7 @@
+{
+"type": "FeatureCollection",
+"name": "community_summary",
+"features": [
+{ "type": "Feature", "properties": { "html_output_file": "sample_data/report.html", "title": "Community Mapping & Library Report", "generated_time": "2026-10-05 18:16:24" }, "geometry": null }
+]
+}

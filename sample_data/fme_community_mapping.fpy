@@ -1,0 +1,57 @@
+{
+  "name": "CommunityMapping_Routing",
+  "version": "1.0.0",
+  "nodes": [
+    {
+      "id": "34f5dab1-6f6f-48ca-889e-54c0d6d803f1",
+      "node_type": "ShapefileReader",
+      "custom_name": "ShapefileReader",
+      "position": {
+        "x": -3746.6509483940026,
+        "y": -895.3393810500374
+      },
+      "params": {
+        "file_path": ""
+      }
+    },
+    {
+      "id": "bbeb1844-5f71-4790-a2bd-fefde37dde74",
+      "node_type": "CentroidExtractor",
+      "custom_name": "CentroidExtractor",
+      "position": {
+        "x": -3355.69830473809,
+        "y": -839.6160253595829
+      },
+      "params": {}
+    },
+    {
+      "id": "55e296df-00b2-407e-94da-e64801c15e26",
+      "node_type": "Reprojector",
+      "custom_name": "Reprojector",
+      "position": {
+        "x": -3473.3775450371204,
+        "y": -941.7759808326963
+      },
+      "params": {
+        "destination_crs": "EPSG:3857",
+        "source_crs_override": ""
+      }
+    }
+  ],
+  "connections": [
+    {
+      "from_node_id": "34f5dab1-6f6f-48ca-889e-54c0d6d803f1",
+      "from_port": "Output",
+      "to_node_id": "55e296df-00b2-407e-94da-e64801c15e26",
+      "to_port": "Input"
+    },
+    {
+      "from_node_id": "55e296df-00b2-407e-94da-e64801c15e26",
+      "from_port": "Output",
+      "to_node_id": "bbeb1844-5f71-4790-a2bd-fefde37dde74",
+      "to_port": "Input"
+    }
+  ],
+  "bookmarks": [],
+  "annotations": []
+}

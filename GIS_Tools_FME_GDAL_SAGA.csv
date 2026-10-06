@@ -1,0 +1,165 @@
+﻿Software,Domain,Category,Tool,What it does
+FME,Vector,Overlay and Geoprocessing,Clipper,Clips features by a polygon (inside/outside output ports)
+FME,Vector,Overlay and Geoprocessing,Bufferer,"Buffer around points, lines or polygons, with a fixed or attribute-driven distance"
+FME,Vector,Overlay and Geoprocessing,Dissolver,Merges polygons or lines based on a shared attribute
+FME,Vector,Overlay and Geoprocessing,Intersector,Splits lines and polygons at their intersections and builds nodes
+FME,Vector,Overlay and Geoprocessing,AreaOnAreaOverlayer,"Polygon overlay, equivalent to Union/Intersect/Identity in ArcGIS"
+FME,Vector,Overlay and Geoprocessing,LineOnLineOverlayer,"Splits and overlays lines, and detects crossings"
+FME,Vector,Overlay and Geoprocessing,LineOnAreaOverlayer,Splits lines by polygons and carries over polygon attributes
+FME,Vector,Overlay and Geoprocessing,PointOnAreaOverlayer,Point-in-polygon attribute transfer
+FME,Vector,Overlay and Geoprocessing,PointOnLineOverlayer,Snaps or tests points against lines
+FME,Vector,Overlay and Geoprocessing,Snapper,Snaps vertices and features within a tolerance
+FME,Vector,Overlay and Geoprocessing,Aggregator / Deaggregator,"Combines features into multi-part geometries, or splits them back"
+FME,Vector,Overlay and Geoprocessing,Chopper / Densifier,"Splits geometry by vertex count, or adds vertices at a set interval"
+FME,Vector,Overlay and Geoprocessing,Generalizer,Simplifies lines and polygons (Douglas-Peucker and others)
+FME,Vector,Spatial Relationships and Queries,SpatialFilter,"Selects candidates by relationship to filter features (intersects, within, touches, etc.)"
+FME,Vector,Spatial Relationships and Queries,SpatialRelator,Records spatial relationships between features as list attributes
+FME,Vector,Spatial Relationships and Queries,NeighborFinder,Finds the nearest neighbor and its distance
+FME,Vector,Spatial Relationships and Queries,Matcher,Finds duplicate or similar geometry
+FME,Vector,Spatial Relationships and Queries,DuplicateRemover,Removes duplicate features by key or geometry
+FME,Vector,Spatial Relationships and Queries,Sampler / Counter,"Takes every Nth feature, and numbers features"
+FME,Vector,Geometry Measurement and Properties,AreaCalculator,Calculates polygon area
+FME,Vector,Geometry Measurement and Properties,LengthCalculator,Calculates line length
+FME,Vector,Geometry Measurement and Properties,CoordinateExtractor / CoordinateConcatenator,"Extracts X, Y, Z coordinates into attributes"
+FME,Vector,Geometry Measurement and Properties,GeometryPropertyExtractor,"Extracts geometry type, vertex count, bounds and so on"
+FME,Vector,Geometry Measurement and Properties,BoundingBoxAccumulator / BoundingBoxReplacer,Builds extents
+FME,Vector,Geometry Measurement and Properties,CenterPointReplacer / CenterLineReplacer,"Centroid, and centerline of polygons"
+FME,Vector,Geometry Measurement and Properties,ConvexHullAccumulator,Convex hull of a feature set
+FME,Vector,Geometry Creation and Editing,GeometryValidator,"Checks for self-intersections, duplicate vertices, etc."
+FME,Vector,Geometry Creation and Editing,GeometryFilter / GeometryCoercer / GeometryReplacer,"Filters, converts or replaces geometry types"
+FME,Vector,Geometry Creation and Editing,PolygonBuilder / AreaBuilder / DonutBuilder,"Builds polygons from lines, with holes"
+FME,Vector,Geometry Creation and Editing,LineBuilder / LineJoiner / LineCombiner,Joins or builds lines
+FME,Vector,Geometry Creation and Editing,VertexCreator / VertexRemover,Adds or removes vertices
+FME,Vector,Geometry Creation and Editing,2DForcer / 3DForcer,Sets the dimension of geometry
+FME,Vector,Geometry Creation and Editing,Mover / Rotator / Scaler / Affiner,Geometric transformations
+FME,Vector,Geometry Creation and Editing,Offsetter,Offsets lines
+FME,Vector,Coordinate Systems,Reprojector,Reprojects between coordinate systems (works for vector and raster)
+FME,Vector,Coordinate Systems,CsmapReprojector,Reprojection using the CS-MAP engine
+FME,Vector,Coordinate Systems,CoordinateSystemSetter,Assigns a CRS without transforming coordinates
+FME,Vector,Network and Topology,TopologyBuilder,Builds topology from lines and polygons
+FME,Vector,Network and Topology,NetworkTopologyCalculator,Finds connected groups (network connectivity)
+FME,Vector,Network and Topology,ShortestPathFinder,Shortest path routing on a network
+FME,Vector,Network and Topology,VoronoiDiagrammer / DelaunayTriangulator,"Thiessen polygons, and triangulation"
+FME,Vector,Attribute and Table Handling,AttributeManager,"Creates, renames, removes and calculates attributes"
+FME,Vector,Attribute and Table Handling,AttributeCreator / AttributeKeeper / AttributeRemover / AttributeRenamer,Focused attribute edits
+FME,Vector,Attribute and Table Handling,Tester / TestFilter / AttributeFilter,Conditional routing of features
+FME,Vector,Attribute and Table Handling,Joiner / FeatureMerger / InlineQuerier,"Table joins, with SQL via InlineQuerier"
+FME,Vector,Attribute and Table Handling,StatisticsCalculator,"Sum, mean, min, max, group statistics"
+FME,Vector,Attribute and Table Handling,Sorter / Sampler / ListExploder / ListBuilder,Sorting and list operations
+FME,Vector,Attribute and Table Handling,StringReplacer / StringSearcher / StringFormatter,Text cleaning
+FME,Vector,Attribute and Table Handling,DateTimeConverter / DateTimeCalculator,Date handling
+FME,Raster,Raster Creation and Conversion,RasterToPolygonCoercer,Converts raster cells to polygons (vectorization)
+FME,Raster,Raster Creation and Conversion,RasterToPointCoercer (or RasterCellCoercer),Converts cells to points or other cell types
+FME,Raster,Raster Creation and Conversion,PointOnRasterValueExtractor,Samples raster values at point locations
+FME,Raster,Raster Creation and Conversion,RasterExtentsCoercer,Creates a polygon of the raster extent
+FME,Raster,Raster Creation and Conversion,RasterDEMGenerator,Builds a DEM from points and lines
+FME,Raster,Raster Creation and Conversion,ContourGenerator,Contour lines from rasters or surfaces
+FME,Raster,Raster Calculations and Cell Operations,RasterExpressionEvaluator,"Map algebra on bands (NDVI, band math, conditionals)"
+FME,Raster,Raster Calculations and Cell Operations,RasterCellValueReplacer,Replaces or reclassifies cell values
+FME,Raster,Raster Calculations and Cell Operations,RasterCellValueRounder,Rounds cell values
+FME,Raster,Raster Calculations and Cell Operations,RasterConvolver,"Kernel filters (smoothing, edge detection)"
+FME,Raster,Raster Calculations and Cell Operations,RasterInterpolator,Interpolates a raster surface
+FME,Raster,Raster Calculations and Cell Operations,RasterDiffer,Difference between two rasters
+FME,Raster,Raster Calculations and Cell Operations,RasterStatisticsCalculator,"Min, max, mean, standard deviation per band"
+FME,Raster,Band and Property Management,RasterBandAdder / RasterBandRemover / RasterBandSelector,"Adds, removes and selects bands"
+FME,Raster,Band and Property Management,RasterBandNodataSetter / RasterBandNodataRemover,Manages NoData values
+FME,Raster,Band and Property Management,RasterBandMinMaxExtractor,Extracts the value range of a band
+FME,Raster,Band and Property Management,RasterPropertyExtractor,"Cell size, extents, number of bands, and so on"
+FME,Raster,Band and Property Management,RasterInterpretationCoercer,Changes data type (e.g. 8-bit to 32-bit float)
+FME,Raster,Band and Property Management,RasterPaletteResolver / RasterRGBCombiner,Handles color palettes and RGB composites
+FME,Raster,Spatial Operations on Rasters,Clipper,Clips a raster by a polygon (also works for rasters)
+FME,Raster,Spatial Operations on Rasters,RasterMosaicker,Mosaics multiple rasters
+FME,Raster,Spatial Operations on Rasters,RasterResampler,Changes cell size or resolution
+FME,Raster,Spatial Operations on Rasters,RasterTiler,Cuts a raster into tiles
+FME,Raster,Spatial Operations on Rasters,RasterPyramider,Builds pyramids and overviews
+FME,Raster,Spatial Operations on Rasters,RasterGeoreferencer,Assigns real-world coordinates to an image
+FME,Raster,Spatial Operations on Rasters,Reprojector,Reprojects rasters
+FME,Raster,Spatial Operations on Rasters,ImageFetcher,Downloads map images from web services
+FME,Raster,Terrain Analysis,SlopeCalculator / AspectCalculator / HillshadeGenerator,"Slope, aspect and hillshade. Exact names vary by FME version; search 'slope' or 'hillshade' in the Transformer Gallery. Alternative: RasterExpressionEvaluator, or GDAL/Python via PythonCaller"
+FME,Point Cloud / 3D,Point Cloud / 3D,PointCloudCombiner / PointCloudSplitter,Merges or splits point clouds
+FME,Point Cloud / 3D,Point Cloud / 3D,PointCloudThinner,Reduces point density
+FME,Point Cloud / 3D,Point Cloud / 3D,PointCloudFilter,"Filters by attribute, such as classification"
+FME,Point Cloud / 3D,Point Cloud / 3D,PointCloudOnRasterComposer,Combines point clouds with rasters
+FME,Point Cloud / 3D,Point Cloud / 3D,SurfaceModeller / TINGenerator,Builds TIN surfaces
+FME,Point Cloud / 3D,Point Cloud / 3D,Extruder / SurfaceDraper,"Extrudes footprints, and drapes geometry over a surface"
+FME,Database & Automation,Database and Automation Tools,SQLExecutor / DatabaseJoiner,"Runs SQL or joins against PostGIS, Oracle, SQL Server, etc."
+FME,Database & Automation,Database and Automation Tools,FeatureReader / FeatureWriter,Reads or writes data at any point inside a workspace
+FME,Database & Automation,Database and Automation Tools,WorkspaceRunner,Chains workspaces together
+FME,Database & Automation,Database and Automation Tools,PythonCaller / PythonCreator,"Custom Python (GDAL, GeoPandas, rasterio, arcpy)"
+FME,Database & Automation,Database and Automation Tools,HTTPCaller / JSONFragmenter / XMLFlattener,Web APIs and JSON/XML parsing
+FME,Database & Automation,Database and Automation Tools,Logger / Terminator / Creator,"Logging, stopping, and creating features"
+FME,Database & Automation,Database and Automation Tools,Custom Transformers,Reusable sub-workflows you build yourself
+GDAL,GDAL / OGR,Raster utilities,gdalinfo,"Shows raster metadata: CRS, extent, bands, NoData, statistics (-stats)"
+GDAL,GDAL / OGR,Raster utilities,gdal_translate,"Converts format, subsets (-srcwin, -projwin), rescales, changes data type, sets NoData"
+GDAL,GDAL / OGR,Raster utilities,gdalwarp,"Reprojects, resamples, mosaics and clips by cutline (-cutline, -crop_to_cutline)"
+GDAL,GDAL / OGR,Raster utilities,gdalbuildvrt,Builds a virtual mosaic (VRT) without copying data
+GDAL,GDAL / OGR,Raster utilities,gdal_merge.py,Simple mosaic or band stacking
+GDAL,GDAL / OGR,Raster utilities,gdaladdo,Builds overviews (pyramids)
+GDAL,GDAL / OGR,Raster utilities,gdal_calc.py,"Raster map algebra with NumPy expressions (NDVI, reclassify, masking)"
+GDAL,GDAL / OGR,Raster utilities,gdal_polygonize.py,Raster to polygon (vectorize)
+GDAL,GDAL / OGR,Raster utilities,gdal_rasterize,Vector to raster (burn a value or attribute)
+GDAL,GDAL / OGR,Raster utilities,gdal_contour,Contour lines or polygons from a DEM
+GDAL,GDAL / OGR,Raster utilities,gdaldem,"Terrain products: hillshade, slope, aspect, color-relief, TRI, TPI, roughness"
+GDAL,GDAL / OGR,Raster utilities,gdal_fillnodata.py,Fills NoData gaps by interpolation
+GDAL,GDAL / OGR,Raster utilities,gdal_proximity.py,Distance-to-feature raster
+GDAL,GDAL / OGR,Raster utilities,gdal_sieve.py,Removes small raster polygons (speckle)
+GDAL,GDAL / OGR,Raster utilities,gdal_grid,"Interpolates scattered points to a grid (IDW, nearest, moving average, linear)"
+GDAL,GDAL / OGR,Raster utilities,gdal_viewshed,Viewshed from an observer point on a DEM
+GDAL,GDAL / OGR,Raster utilities,gdal_retile.py / gdal2tiles.py,"Cuts a raster into tiles, or builds web map tiles"
+GDAL,GDAL / OGR,Raster utilities,gdal_edit.py,"Edits metadata, NoData and georeferencing in place"
+GDAL,GDAL / OGR,Raster utilities,gdal_pansharpen.py,Pan-sharpening of multispectral imagery
+GDAL,GDAL / OGR,Raster utilities,gdallocationinfo,Reads pixel values at coordinates
+GDAL,GDAL / OGR,Raster utilities,gdaltransform,Transforms coordinates between CRS
+GDAL,GDAL / OGR,Raster utilities,gdalsrsinfo,"Shows CRS details in WKT, PROJ and EPSG forms"
+GDAL,GDAL / OGR,Raster utilities,gdaltindex,Builds a tile index of raster footprints
+GDAL,GDAL / OGR,Raster utilities,gdal_footprint,Extracts the valid-data footprint of rasters as vectors
+GDAL,GDAL / OGR,Raster utilities,gdal_create,Creates an empty raster
+GDAL,GDAL / OGR,Raster utilities,rgb2pct.py / pct2rgb.py,Converts between RGB and a palette
+GDAL,GDAL / OGR,Raster utilities,gdalcompare.py,Compares two rasters
+GDAL,GDAL / OGR,Raster utilities,nearblack,Turns near-black or near-white edge pixels into NoData
+GDAL,GDAL / OGR,Vector utilities (OGR),ogrinfo,"Inspects layers, runs SQL (-sql, -dialect SQLite/OGRSQL), shows extent and counts"
+GDAL,GDAL / OGR,Vector utilities (OGR),ogr2ogr,"Format conversion, reprojection (-t_srs), filters (-where, -spat), clipping (-clipsrc), simplify, densify (-segmentize), explode multipart, geometry type (-nlt), repair (-makevalid)"
+GDAL,GDAL / OGR,Vector utilities (OGR),ogrmerge.py,Merges many vector files into one
+GDAL,GDAL / OGR,Vector utilities (OGR),ogrtindex,Builds a tile index for vector files
+GDAL,GDAL / OGR,Vector utilities (OGR),ogrlineref,Linear referencing (create routes and event positions)
+GDAL,GDAL / OGR,Vector utilities (OGR),ogr_layer_algebra.py,"Overlay: Union, Intersection, SymDifference, Identity, Update, Clip, Erase"
+GDAL,GDAL / OGR,Vector utilities (OGR),SQLite dialect functions (via ogr2ogr/ogrinfo),"ST_Buffer, ST_Intersection, ST_Union, ST_Centroid, ST_Area, ST_Length, ST_Distance, spatial joins and dissolves via GROUP BY"
+GDAL,GDAL / OGR,Newer unified CLI (GDAL 3.11+),gdal raster / gdal vector subcommands,"Single gdal command, e.g. gdal raster convert, clip, reproject; gdal vector convert, clip. Older utilities still work"
+GDAL,GDAL / OGR,Python API (osgeo),"gdal.Open, ReadAsArray, WriteArray",Read and write rasters as NumPy arrays
+GDAL,GDAL / OGR,Python API (osgeo),gdal.Warp / Translate / BuildVRT,Python versions of the utilities
+GDAL,GDAL / OGR,Python API (osgeo),gdal.DEMProcessing,"Hillshade, slope, aspect and the other gdaldem modes"
+GDAL,GDAL / OGR,Python API (osgeo),gdal.Rasterize / Polygonize / Contour / Grid,"Vector and raster conversion, contours, interpolation"
+GDAL,GDAL / OGR,Python API (osgeo),gdal.FillNodata / SieveFilter / ComputeProximity,"NoData fill, speckle removal, distance"
+GDAL,GDAL / OGR,Python API (osgeo),gdal.ViewshedGenerate,Viewshed
+GDAL,GDAL / OGR,Python API (osgeo),gdal.VectorTranslate,The ogr2ogr equivalent
+GDAL,GDAL / OGR,Python API (osgeo),gdal.Info,"The gdalinfo equivalent, returned as a dict"
+GDAL,GDAL / OGR,Python API (osgeo),"ogr (Geometry, Layer, Feature)","Vector reading, geometry operations (Buffer, Intersection, Union, Centroid) and attribute filters"
+GDAL,GDAL / OGR,Python API (osgeo),"osr (SpatialReference, CoordinateTransformation)",CRS handling and reprojection
+SAGA,SAGA GIS,Terrain analysis,ta_morphometry (library),"Slope, Aspect, Curvature; Topographic Position Index; Terrain Ruggedness Index; Convergence Index; Morphometric Protection Index; Real Surface Area; Wind Exposition Index"
+SAGA,SAGA GIS,Terrain analysis,ta_lighting (library),Analytical Hillshading; Sky View Factor; Potential Incoming Solar Radiation; Topographic Correction; Visibility (viewshed)
+SAGA,SAGA GIS,Terrain analysis,ta_preprocessor (library),"Fill Sinks (Wang & Liu), Fill Sinks XXL, Sink Removal, Burn Stream Network into DEM"
+SAGA,SAGA GIS,Terrain analysis,ta_hydrology (library),"Flow Accumulation (multiple methods), Flow Path Length, Catchment Area, Topographic Wetness Index, SAGA Wetness Index, Slope Length and LS Factor, Cell Balance"
+SAGA,SAGA GIS,Terrain analysis,ta_channels (library),"Channel Network, Channel Network and Drainage Basins, Strahler Order, Vertical Distance to Channel Network, Overland Flow Distance to Channel Network, Watershed Basins"
+SAGA,SAGA GIS,Terrain analysis,ta_profiles (library),"Cross Profiles, Profiles from Lines, Profiles from Points"
+SAGA,SAGA GIS,Raster (grid) processing,grid_calculus (library),"Grid Calculator (map algebra), Grid Calculator for Collections, Grid Normalisation, Fuzzify, Random Fields"
+SAGA,SAGA GIS,Raster (grid) processing,grid_tools (library),"Resampling, Mosaicking, Merging, Clip Grids, Reclassify Grid Values, Grid Buffer, Proximity Grid, Close Gaps, Crop to Data, Convert Data Storage Type, Tiling"
+SAGA,SAGA GIS,Raster (grid) processing,grid_filter (library),"Gaussian Filter, Simple Filter, Majority/Minority Filter, Morphological Filter, Sieve Classes, DTM Filter (slope-based), Mesh Denoise"
+SAGA,SAGA GIS,Raster (grid) processing,grid_gridding (library),"Inverse Distance Weighted, Ordinary and Universal Kriging, Natural Neighbour, Nearest Neighbour, Triangulation, Shapes to Grid"
+SAGA,SAGA GIS,Raster (grid) processing,grid_spline (library),"B-Spline Approximation, Multilevel B-Spline, Thin Plate Spline"
+SAGA,SAGA GIS,Raster (grid) processing,grid_analysis (library),"Analytical Hierarchy Process, Ordered Weighted Averaging, Layer of Maximum Value, Accumulated Cost, Least Cost Paths, Fragmentation, Pattern Analysis, Local Minima/Maxima"
+SAGA,SAGA GIS,Raster and vector interaction,shapes_grid (library),"Grid Statistics for Polygons (zonal stats), Add Grid Values to Points, Clip Grid with Polygon, Contour Lines from Grid, Vectorising Grid Classes, Grid Values to Points"
+SAGA,SAGA GIS,Vector processing,shapes_polygons (library),"Polygon Dissolve, Intersection, Union, Difference, Symmetrical Difference, Clip, Centroids, Shape Indices, Parts to Separate Polygons, Self-Intersection"
+SAGA,SAGA GIS,Vector processing,shapes_lines (library),"Line Simplification, Line Smoothing, Line Dissolve, Line-Polygon Intersection, Polygons to Lines, Split Lines at Points, Line Properties"
+SAGA,SAGA GIS,Vector processing,shapes_points (library),"Convex Hull, Add Polygon Attributes to Points, Distance Matrix, Point Thinning, Clip Points with Polygons, Snap Points to Points, Minimum Distance Analysis"
+SAGA,SAGA GIS,Vector processing,shapes_tools (library),"Merge Layers, Split Shapes Layer, Shapes Buffer, Select by Attributes/Location, Transform Shapes, Create Graticule, Cut Shapes Layer"
+SAGA,SAGA GIS,"Statistics, imagery and simulation",statistics_regression (library),"Multiple Regression Analysis, Geographically Weighted Regression, Regression Kriging"
+SAGA,SAGA GIS,"Statistics, imagery and simulation",statistics_spatial (library),"Spatial Point Pattern Analysis, Global Moran's I, Getis-Ord Gi*"
+SAGA,SAGA GIS,"Statistics, imagery and simulation",statistics_kriging (library),"Ordinary and Universal Kriging, variogram tools"
+SAGA,SAGA GIS,"Statistics, imagery and simulation",imagery_classification (library),"Supervised Classification (Maximum Likelihood, Minimum Distance, SVM), K-Means and ISODATA clustering"
+SAGA,SAGA GIS,"Statistics, imagery and simulation",imagery_tools (library),"Vegetation Index (NDVI and others), Principal Component Analysis, Tasseled Cap, Top of Atmosphere Reflectance"
+SAGA,SAGA GIS,"Statistics, imagery and simulation",sim_hydrology (library),"Overland Flow (kinematic wave), TOPMODEL, Water Retention Capacity"
+SAGA,SAGA GIS,"Statistics, imagery and simulation",sim_fire_spreading (library),Fire spread simulation
+SAGA,SAGA GIS,"Statistics, imagery and simulation",pointcloud_tools / io_shapes_las (library),Point cloud import (LAS) and basic processing
+SAGA,SAGA GIS,"Import, export and projection",io_gdal (library),"Import and export rasters and vectors through GDAL/OGR, NetCDF import"
+SAGA,SAGA GIS,"Import, export and projection",io_shapes / io_grid (library),Native Shapefile and grid I/O
+SAGA,SAGA GIS,"Import, export and projection",pj_proj4 (library),Coordinate Transformation for shapes and for grids (PROJ-based)
