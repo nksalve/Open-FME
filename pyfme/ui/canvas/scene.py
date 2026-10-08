@@ -36,6 +36,11 @@ class CanvasScene(QGraphicsScene):
     run_to_this_requested = pyqtSignal(str)  # Emits node_id
     run_from_this_requested = pyqtSignal(str)  # Emits node_id
     graph_modified = pyqtSignal()
+    save_flow_requested = pyqtSignal()
+    save_flow_as_requested = pyqtSignal()
+    save_selected_flow_requested = pyqtSignal()
+    export_flow_image_requested = pyqtSignal()
+
 
     def __init__(self, graph: Optional[WorkflowGraph] = None, parent=None):
         super().__init__(parent)
@@ -302,6 +307,12 @@ class CanvasScene(QGraphicsScene):
                 action_run_from = menu.addAction("▶  Run From This")
                 action_inspect = menu.addAction("🔍  Inspect Cached Features")
                 menu.addSeparator()
+                action_save_flow = menu.addAction("💾  Save Flow (Ctrl+S)")
+                selected_nodes = self.get_selected_node_ids()
+                action_save_selected = menu.addAction("💾  Save Selected Flow...")
+                if len(selected_nodes) == 0:
+                    action_save_selected.setEnabled(False)
+                menu.addSeparator()
                 action_cut = menu.addAction("Cut (Ctrl+X)")
                 action_copy = menu.addAction("Copy (Ctrl+C)")
                 action_duplicate = menu.addAction("Duplicate (Ctrl+D)")
@@ -317,6 +328,10 @@ class CanvasScene(QGraphicsScene):
                     outputs = getattr(item.node, "last_outputs", None) or {}
                     ds = outputs.get(port_name, FeatureDataset.empty())
                     self.node_inspected.emit(item.node, port_name, ds)
+                elif chosen == action_save_flow:
+                    self.save_flow_requested.emit()
+                elif chosen == action_save_selected:
+                    self.save_selected_flow_requested.emit()
                 elif chosen == action_cut:
                     self.cut_selected()
                 elif chosen == action_copy:
@@ -329,8 +344,12 @@ class CanvasScene(QGraphicsScene):
         except Exception:
             return
 
-
         # Empty canvas context menu
+        action_save_flow = menu.addAction("💾  Save Flow (Ctrl+S)")
+        action_save_flow_as = menu.addAction("💾  Save Flow As... (Ctrl+Shift+S)")
+        action_export_img = menu.addAction("🖼️  Export Flow as Image...")
+        menu.addSeparator()
+
         undo_text = f"Undo {self.undo_stack.undoText()} (Ctrl+Z)" if self.undo_stack.canUndo() else "Undo (Ctrl+Z)"
         action_undo = menu.addAction(undo_text)
         action_undo.setEnabled(self.undo_stack.canUndo())
@@ -350,7 +369,13 @@ class CanvasScene(QGraphicsScene):
         action_add_ann = menu.addAction("📝 Add Annotation Note...")
 
         chosen = menu.exec(event.screenPos())
-        if chosen == action_undo:
+        if chosen == action_save_flow:
+            self.save_flow_requested.emit()
+        elif chosen == action_save_flow_as:
+            self.save_flow_as_requested.emit()
+        elif chosen == action_export_img:
+            self.export_flow_image_requested.emit()
+        elif chosen == action_undo:
             self.undo_stack.undo()
         elif chosen == action_redo:
             self.undo_stack.redo()
@@ -362,6 +387,33 @@ class CanvasScene(QGraphicsScene):
             self.add_bookmark(pos=event.scenePos())
         elif chosen == action_add_ann:
             self.add_annotation(pos=event.scenePos())
+
+    def get_selected_node_ids(self) -> Set[str]:
+        """Returns the set of node IDs currently selected on canvas."""
+        return {item.node.id for item in self.selectedItems() if isinstance(item, NodeItem)}
+
+    def export_image(self, file_path: str) -> bool:
+        """Renders visual flow canvas to an image file (PNG, JPG, BMP)."""
+        from PyQt6.QtGui import QImage
+        rect = self.itemsBoundingRect().adjusted(-60, -60, 60, 60)
+        if rect.isEmpty() or rect.width() <= 0 or rect.height() <= 0:
+            rect = QRectF(0, 0, 800, 600)
+
+        # Scale down if unusually massive to avoid out-of-memory
+        scale = min(1.0, 4096.0 / max(rect.width(), rect.height()))
+        w = max(100, int(rect.width() * scale))
+        h = max(100, int(rect.height() * scale))
+
+        image = QImage(w, h, QImage.Format.Format_ARGB32)
+        image.fill(QColor("#16161b"))
+        painter = QPainter(image)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+        painter.setRenderHint(QPainter.RenderHint.TextAntialiasing)
+        painter.setRenderHint(QPainter.RenderHint.SmoothPixmapTransform)
+        self.render(painter, QRectF(0, 0, w, h), rect)
+        painter.end()
+        return image.save(file_path)
+
 
     def add_bookmark(
         self,

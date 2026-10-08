@@ -233,6 +233,18 @@ class GenerateWorkspaceDialog(QDialog):
         w_path = self.writer_path_edit.text().strip()
         return r_type, r_path, w_type, w_path
 
+    def get_config(self) -> dict:
+        """Returns dictionary config matching main_window expectations."""
+        r_type, r_path, w_type, w_path = self.get_result()
+        return {
+            "reader_type": r_type,
+            "reader_path": r_path,
+            "writer_type": w_type,
+            "writer_path": w_path,
+            "workspace_name": f"{r_type} to {w_type} Translation",
+        }
+
+
 
 class AddReaderDialog(QDialog):
     """FME Add Reader dialog (Ctrl+Alt+R)."""

@@ -39,7 +39,9 @@ def get_qapp():
     app = QApplication.instance()
     if not app:
         app = QApplication(sys.argv)
+    app.setQuitOnLastWindowClosed(False)
     return app
+
 
 
 def test_python_caller_runtime_error_does_not_crash():

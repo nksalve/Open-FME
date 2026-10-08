@@ -96,7 +96,33 @@ class NavigatorWidget(QWidget):
         """)
         self.tree.itemClicked.connect(self._on_item_clicked)
         self.tree.itemDoubleClicked.connect(self._on_item_double_clicked)
+        self.tree.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
+        self.tree.customContextMenuRequested.connect(self._on_context_menu)
         layout.addWidget(self.tree)
+
+    def _on_context_menu(self, pos):
+        if not self.main_window:
+            return
+        menu = QMenu(self)
+        act_save = menu.addAction("💾  Save Flow (Ctrl+S)")
+        act_save_as = menu.addAction("💾  Save Flow As... (Ctrl+Shift+S)")
+        act_export = menu.addAction("🖼️  Export Flow Image...")
+
+        chosen = menu.exec(self.tree.viewport().mapToGlobal(pos))
+        if chosen == act_save:
+            if hasattr(self.main_window, "save_flow"):
+                self.main_window.save_flow()
+            elif hasattr(self.main_window, "save_workspace"):
+                self.main_window.save_workspace()
+        elif chosen == act_save_as:
+            if hasattr(self.main_window, "save_flow_as"):
+                self.main_window.save_flow_as()
+            elif hasattr(self.main_window, "save_as_workspace"):
+                self.main_window.save_as_workspace()
+        elif chosen == act_export:
+            if hasattr(self.main_window, "export_flow_image"):
+                self.main_window.export_flow_image()
+
 
     def refresh(self):
         """Rebuilds the Navigator tree hierarchy from the active canvas scene."""

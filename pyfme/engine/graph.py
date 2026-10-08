@@ -3,6 +3,7 @@ Directed Acyclic Graph (DAG) for managing FME-style workflows, connections, and 
 """
 
 from __future__ import annotations
+import os
 import json
 from typing import Any, Dict, List, Optional, Set, Tuple
 from pyfme.engine.nodes.base import BaseNode
@@ -202,7 +203,47 @@ class WorkflowGraph:
             )
         return graph
 
+    def subgraph(self, node_ids: Set[str], name: Optional[str] = None) -> WorkflowGraph:
+        """
+        Extracts a subset of nodes and connections into a new independent WorkflowGraph.
+        Useful for saving selected flow segments, custom transformers, or templates.
+        """
+        sub_name = name or f"{self.name} - Selected Flow"
+        sub = WorkflowGraph(name=sub_name)
+
+        # 1. Copy nodes
+        for nid in node_ids:
+            orig_node = self.nodes.get(nid)
+            if orig_node:
+                new_node = NodeRegistry.create(
+                    orig_node.node_type,
+                    node_id=orig_node.id,
+                    custom_name=orig_node.name,
+                )
+                if new_node:
+                    new_node.x = orig_node.x
+                    new_node.y = orig_node.y
+                    new_node.params = dict(orig_node.params)
+                    sub.add_node(new_node)
+
+
+        # 2. Copy connections where both endpoints are inside the subgraph
+        for conn in self.connections:
+            if conn.from_node_id in node_ids and conn.to_node_id in node_ids:
+                sub.connect(
+                    conn.from_node_id,
+                    conn.from_port,
+                    conn.to_node_id,
+                    conn.to_port,
+                )
+
+        return sub
+
     def save_to_file(self, file_path: str) -> None:
+        """Saves workflow graph to .fpy or .json format."""
+        dir_name = os.path.dirname(os.path.abspath(file_path))
+        if dir_name:
+            os.makedirs(dir_name, exist_ok=True)
         with open(file_path, "w", encoding="utf-8") as f:
             json.dump(self.to_dict(), f, indent=2)
 
@@ -211,3 +252,4 @@ class WorkflowGraph:
         with open(file_path, "r", encoding="utf-8") as f:
             data = json.load(f)
         return cls.from_dict(data)
+

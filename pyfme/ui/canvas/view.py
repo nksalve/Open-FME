@@ -138,6 +138,25 @@ class CanvasView(QGraphicsView):
             event.accept()
             return
 
+        # Save Flow (Ctrl+S) / Save Flow As (Ctrl+Shift+S)
+        elif ctrl and not shift and event.key() == Qt.Key.Key_S:
+            win = self.window()
+            if hasattr(win, "save_flow"):
+                win.save_flow()
+            elif hasattr(win, "save_workspace"):
+                win.save_workspace()
+            event.accept()
+            return
+        elif ctrl and shift and event.key() == Qt.Key.Key_S:
+            win = self.window()
+            if hasattr(win, "save_flow_as"):
+                win.save_flow_as()
+            elif hasattr(win, "save_as_workspace"):
+                win.save_as_workspace()
+            event.accept()
+            return
+
+
         # Delete
         elif event.key() in (Qt.Key.Key_Delete, Qt.Key.Key_Backspace):
             self.canvas_scene.remove_selected()

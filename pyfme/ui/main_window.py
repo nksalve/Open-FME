@@ -47,6 +47,7 @@ class MainWindow(QMainWindow):
 
         # State
         self.current_file_path: Optional[str] = None
+        self._is_flow_dirty: bool = False
         self.graph = WorkflowGraph("New Workspace")
         self.exec_thread: Optional[WorkflowExecutionThread] = None
 
@@ -62,6 +63,7 @@ class MainWindow(QMainWindow):
 
         # Load a default sample workflow if empty so user immediately sees a working pipeline
         self.load_sample_workflow()
+
 
     def _init_canvas(self):
         self.central_tabs = QTabWidget()
@@ -173,10 +175,17 @@ class MainWindow(QMainWindow):
         self.act_open.triggered.connect(self.open_workspace)
         self.toolbar.addAction(self.act_open)
 
-        self.act_save = QAction("Save", self)
+        self.act_save = QAction("💾 Save Flow", self)
+        self.act_save.setToolTip("Save Flow (Ctrl+S): Save current pipeline to file")
         self.act_save.setShortcut(QKeySequence.StandardKey.Save)
-        self.act_save.triggered.connect(self.save_workspace)
+        self.act_save.triggered.connect(self.save_flow)
         self.toolbar.addAction(self.act_save)
+
+        self.act_save_as = QAction("Save Flow As...", self)
+        self.act_save_as.setToolTip("Save Flow As (Ctrl+Shift+S): Save pipeline to new file")
+        self.act_save_as.setShortcut(QKeySequence("Ctrl+Shift+S"))
+        self.act_save_as.triggered.connect(self.save_flow_as)
+        self.toolbar.addAction(self.act_save_as)
 
         self.toolbar.addSeparator()
 
@@ -275,17 +284,27 @@ class MainWindow(QMainWindow):
         file_menu.addAction(self.act_new)
         file_menu.addAction(self.act_gen_ws)
         file_menu.addAction(self.act_open)
-        file_menu.addAction(self.act_save)
+        file_menu.addSeparator()
 
-        save_as_act = QAction("Save As...", self)
-        save_as_act.triggered.connect(self.save_as_workspace)
-        file_menu.addAction(save_as_act)
+        file_menu.addAction(self.act_save)
+        file_menu.addAction(self.act_save_as)
+
+        self.act_save_selected = QAction("Save Selected Flow...", self)
+        self.act_save_selected.setToolTip("Save selected flow nodes and connections to a file")
+        self.act_save_selected.triggered.connect(self.save_selected_flow_as)
+        file_menu.addAction(self.act_save_selected)
+
+        self.act_export_image = QAction("🖼️ Export Flow Image...", self)
+        self.act_export_image.setToolTip("Export the visual flow diagram to an image file (PNG/JPG)")
+        self.act_export_image.triggered.connect(self.export_flow_image)
+        file_menu.addAction(self.act_export_image)
 
         file_menu.addSeparator()
 
         sample_act = QAction("Load Sample Spatial Pipeline", self)
         sample_act.triggered.connect(self.load_sample_workflow)
         file_menu.addAction(sample_act)
+
 
         file_menu.addSeparator()
         exit_act = QAction("Exit", self)
@@ -395,9 +414,16 @@ class MainWindow(QMainWindow):
         self.scene.run_from_this_requested.connect(self.run_from_this)
         self.scene.graph_modified.connect(self._update_stats)
         self.scene.graph_modified.connect(self.navigator_widget.refresh)
+        self.scene.graph_modified.connect(self.mark_flow_dirty)
+        self.scene.save_flow_requested.connect(self.save_flow)
+        self.scene.save_flow_as_requested.connect(self.save_flow_as)
+        self.scene.save_selected_flow_requested.connect(self.save_selected_flow_as)
+        self.scene.export_flow_image_requested.connect(self.export_flow_image)
 
         # Property editor changes
         self.props_widget.parameters_changed.connect(self._on_node_params_changed)
+        self.props_widget.parameters_changed.connect(lambda _: self.mark_flow_dirty())
+
 
         # Transformer Gallery events
         self.palette_widget.node_requested.connect(self._add_node_center)
@@ -675,50 +701,185 @@ class MainWindow(QMainWindow):
                 self.central_tabs.setCurrentIndex(1)
                 self.log_widget.append_log(f"Added Writer '{w_type}' ({w_path})", "INFO")
 
+    def mark_flow_dirty(self):
+        self._is_flow_dirty = True
+        self._update_window_title()
+
+    def mark_flow_clean(self):
+        self._is_flow_dirty = False
+        self._update_window_title()
+
+    def _update_window_title(self):
+        if self.current_file_path:
+            name = os.path.basename(self.current_file_path)
+        else:
+            name = getattr(self.graph, "name", None) or "Untitled Flow"
+        star = " *" if self._is_flow_dirty else ""
+        self.setWindowTitle(f"open-FME Workbench - {name}{star}")
+        if hasattr(self, "central_tabs") and self.central_tabs.count() > 1:
+            tab_label = f"{name}{star}" if self.current_file_path else f"Main{star}"
+            self.central_tabs.setTabText(1, tab_label)
+
+    def maybe_save_flow(self) -> bool:
+        """Prompts to save flow if unsaved changes exist. Returns False if cancelled."""
+        if not getattr(self, "_is_flow_dirty", False):
+            return True
+        if os.environ.get("OPENFME_TEST_MODE") == "1":
+            return True
+
+        res = QMessageBox.question(
+            self,
+            "Save Flow Changes?",
+            "Your flow has unsaved modifications.\nDo you want to save your flow changes before continuing?",
+            QMessageBox.StandardButton.Save | QMessageBox.StandardButton.Discard | QMessageBox.StandardButton.Cancel,
+            QMessageBox.StandardButton.Save
+        )
+        if res == QMessageBox.StandardButton.Save:
+            return self.save_flow()
+        elif res == QMessageBox.StandardButton.Discard:
+            return True
+        else:
+            return False
+
+    def closeEvent(self, event):
+        if not self.maybe_save_flow():
+            event.ignore()
+            return
+        event.accept()
+
     def new_workspace(self):
-        self.graph = WorkflowGraph("Untitled Workspace")
+        if not self.maybe_save_flow():
+            return
+        self.graph = WorkflowGraph("Untitled Flow")
         self.scene.set_graph(self.graph)
         self.props_widget.set_node(None)
         self.inspector_widget.inspect_dataset(BaseNode(), "None", None)
         self.current_file_path = None
-        self.setWindowTitle("open-FME Workbench - Untitled Workspace")
+        self.mark_flow_clean()
         self._update_stats()
         self.navigator_widget.refresh()
         self.central_tabs.setCurrentIndex(1)
 
     def open_workspace(self):
-        path, _ = QFileDialog.getOpenFileName(self, "Open open-FME Workspace", "", "open-FME Workspace (*.fpy *.json);;All Files (*.*)")
+        if not self.maybe_save_flow():
+            return
+        path, _ = QFileDialog.getOpenFileName(
+            self, "Open open-FME Flow", "",
+            "open-FME Flow (*.fpy *.json);;All Files (*.*)"
+        )
         if path:
             self.load_workspace_file(path)
 
-    def save_workspace(self):
+    def save_flow(self) -> bool:
+        """
+        Saves the current pipeline flow to disk.
+        Prompts for destination via save_flow_as if flow is untitled.
+        """
         try:
             self.scene.sync_to_graph()
             if not self.current_file_path:
-                self.save_as_workspace()
+                return self.save_flow_as()
             else:
                 self.graph.save_to_file(self.current_file_path)
+                self.mark_flow_clean()
                 self.status_msg.setText(f"Saved: {self.current_file_path}")
-                self.log_widget.append_log(f"Workspace saved to: {self.current_file_path}", "INFO")
+                self.log_widget.append_log(f"Flow saved to: {self.current_file_path}", "INFO")
+                return True
         except Exception as e:
             if os.environ.get("OPENFME_TEST_MODE") != "1":
-                QMessageBox.critical(self, "Save Error", f"Failed to save workspace:\n{str(e)}")
-            self.log_widget.append_log(f"Failed to save workspace: {e}", "ERROR")
+                QMessageBox.critical(self, "Save Error", f"Failed to save flow:\n{str(e)}")
+            self.log_widget.append_log(f"Failed to save flow: {e}", "ERROR")
+            return False
 
-    def save_as_workspace(self):
+    def save_flow_as(self) -> bool:
+        """
+        Prompts user to select a destination path and saves the flow.
+        """
         try:
             self.scene.sync_to_graph()
-            path, _ = QFileDialog.getSaveFileName(self, "Save Workspace", "workspace.fpy", "open-FME Workspace (*.fpy *.json);;All Files (*.*)")
+            default_name = os.path.basename(self.current_file_path) if self.current_file_path else "flow.fpy"
+            path, _ = QFileDialog.getSaveFileName(
+                self, "Save Flow As", default_name,
+                "open-FME Flow (*.fpy *.json);;open-FME Flow (*.fpy);;JSON Flow (*.json);;All Files (*.*)"
+            )
             if path:
                 self.current_file_path = path
+                self.graph.name = os.path.splitext(os.path.basename(path))[0]
                 self.graph.save_to_file(path)
-                self.setWindowTitle(f"open-FME Workbench - {os.path.basename(path)}")
+                self.mark_flow_clean()
                 self.status_msg.setText(f"Saved: {path}")
-                self.log_widget.append_log(f"Workspace saved to: {path}", "INFO")
+                self.log_widget.append_log(f"Flow saved to: {path}", "INFO")
+                self.navigator_widget.refresh()
+                return True
+            return False
         except Exception as e:
             if os.environ.get("OPENFME_TEST_MODE") != "1":
-                QMessageBox.critical(self, "Save Error", f"Failed to save workspace:\n{str(e)}")
-            self.log_widget.append_log(f"Failed to save workspace: {e}", "ERROR")
+                QMessageBox.critical(self, "Save Error", f"Failed to save flow:\n{str(e)}")
+            self.log_widget.append_log(f"Failed to save flow: {e}", "ERROR")
+            return False
+
+    def save_selected_flow_as(self) -> bool:
+        """
+        Saves only the currently selected nodes and connecting wires to a separate flow file.
+        """
+        selected_ids = self.scene.get_selected_node_ids()
+        if not selected_ids:
+            if os.environ.get("OPENFME_TEST_MODE") != "1":
+                QMessageBox.information(
+                    self, "Save Selected Flow",
+                    "Please select one or more nodes on the canvas to save as a flow snippet."
+                )
+            return False
+
+        try:
+            self.scene.sync_to_graph()
+            sub = self.graph.subgraph(selected_ids, name="Selected Flow Snippet")
+            path, _ = QFileDialog.getSaveFileName(
+                self, "Save Selected Flow", "subflow.fpy",
+                "open-FME Flow (*.fpy *.json);;open-FME Flow (*.fpy);;JSON Flow (*.json);;All Files (*.*)"
+            )
+            if path:
+                sub.save_to_file(path)
+                self.status_msg.setText(f"Saved selected flow: {path}")
+                self.log_widget.append_log(f"Selected flow ({len(selected_ids)} nodes) saved to: {path}", "INFO")
+                return True
+            return False
+        except Exception as e:
+            if os.environ.get("OPENFME_TEST_MODE") != "1":
+                QMessageBox.critical(self, "Save Error", f"Failed to save selected flow:\n{str(e)}")
+            self.log_widget.append_log(f"Failed to save selected flow: {e}", "ERROR")
+            return False
+
+    def export_flow_image(self) -> bool:
+        """
+        Renders the entire visual flow canvas diagram and saves it as an image file (PNG/JPG/BMP).
+        """
+        try:
+            default_name = "flow.png"
+            if self.current_file_path:
+                default_name = os.path.splitext(os.path.basename(self.current_file_path))[0] + ".png"
+            path, _ = QFileDialog.getSaveFileName(
+                self, "Export Flow Diagram Image", default_name,
+                "PNG Image (*.png);;JPEG Image (*.jpg *.jpeg);;Bitmap (*.bmp);;All Files (*.*)"
+            )
+            if path:
+                ok = self.scene.export_image(path)
+                if ok:
+                    self.status_msg.setText(f"Exported flow image: {path}")
+                    self.log_widget.append_log(f"Exported flow diagram image to: {path}", "INFO")
+                    return True
+                else:
+                    raise RuntimeError("Image rendering failed.")
+            return False
+        except Exception as e:
+            if os.environ.get("OPENFME_TEST_MODE") != "1":
+                QMessageBox.critical(self, "Export Error", f"Failed to export flow image:\n{str(e)}")
+            self.log_widget.append_log(f"Failed to export flow image: {e}", "ERROR")
+            return False
+
+    # Aliases for backward compatibility
+    save_workspace = save_flow
+    save_as_workspace = save_flow_as
 
     def load_workspace_file(self, path: str):
         try:
@@ -726,7 +887,7 @@ class MainWindow(QMainWindow):
             self.graph = loaded_graph
             self.scene.set_graph(self.graph)
             self.current_file_path = path
-            self.setWindowTitle(f"open-FME Workbench - {os.path.basename(path)}")
+            self.mark_flow_clean()
             self._update_stats()
             self.navigator_widget.refresh()
             self.central_tabs.setCurrentIndex(1)
@@ -736,6 +897,7 @@ class MainWindow(QMainWindow):
             if os.environ.get("OPENFME_TEST_MODE") != "1":
                 QMessageBox.critical(self, "Open Error", f"Failed to load workspace:\n{str(e)}")
             self.log_widget.append_log(f"Failed to load workspace file '{path}': {e}", "ERROR")
+
 
 
     def load_community_mapping_sample(self):
@@ -808,8 +970,10 @@ class MainWindow(QMainWindow):
 
         self.graph = graph
         self.scene.set_graph(self.graph)
+        self.mark_flow_clean()
         self._update_stats()
         self.zoom_fit()
+
 
     def show_about(self):
         QMessageBox.about(
@@ -819,6 +983,8 @@ class MainWindow(QMainWindow):
             "<p>A modern open-source visual ETL & Spatial Automation platform for Python.</p>"
             "<p>Built on <b>Polars</b> for high-speed attribute processing, and <b>GeoPandas / Shapely</b> for GIS operations.</p>"
             "<p><b>Keyboard Shortcuts & Tools:</b><br>"
+            "• <b>Ctrl+S / Ctrl+Shift+S:</b> Save Flow / Save Flow As...<br>"
+            "• <b>Right-Click Canvas:</b> Save Flow, Save Flow As, Export Flow Image<br>"
             "• <b>Ctrl+G:</b> Generate Workspace (Reader to Writer Translation)<br>"
             "• <b>Ctrl+Alt+R / Ctrl+Alt+W:</b> Add Reader / Add Writer<br>"
             "• <b>F5:</b> Run entire pipeline<br>"
@@ -833,3 +999,4 @@ class MainWindow(QMainWindow):
             "• <b>Middle-Drag or Alt+Drag:</b> Pan canvas<br>"
             "• <b>Scroll Wheel:</b> Zoom in / out</p>"
         )
+
