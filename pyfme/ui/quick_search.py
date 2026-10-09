@@ -75,9 +75,15 @@ class QuickAddDialog(QDialog):
         self.list_widget.clear()
         matching = NodeRegistry.search(query)
         for node_cls in matching:
-            item = QListWidgetItem(f"{node_cls.node_type} - {node_cls.category.value.split()[0]}")
+            disp_name = node_cls.get_display_name() if hasattr(node_cls, "get_display_name") else node_cls.node_type
+            item = QListWidgetItem(f"{disp_name} - {node_cls.category.value.split()[0]}")
             item.setData(Qt.ItemDataRole.UserRole, node_cls.node_type)
-            item.setToolTip(f"<div style='font-family: Segoe UI; font-size: 11px;'><b>{node_cls.node_type}</b><br><span style='color: #81d4fa;'>Category:</span> {node_cls.category.value}<br><br>{node_cls.description}</div>")
+            item.setToolTip(
+                f"<div style='font-family: Segoe UI; font-size: 11px;'>"
+                f"<b>{disp_name}</b> <span style='color: #888;'>({node_cls.node_type})</span><br>"
+                f"<span style='color: #81d4fa;'>Category:</span> {node_cls.category.value}<br><br>"
+                f"{node_cls.description}</div>"
+            )
             self.list_widget.addItem(item)
         if self.list_widget.count() > 0:
             self.list_widget.setCurrentRow(0)
@@ -87,7 +93,8 @@ class QuickAddDialog(QDialog):
             node_type = current.data(Qt.ItemDataRole.UserRole)
             node_cls = NodeRegistry.get(node_type)
             if node_cls:
-                self.desc_label.setText(f"<b>{node_cls.node_type}</b>: {node_cls.description}")
+                disp_name = node_cls.get_display_name() if hasattr(node_cls, "get_display_name") else node_cls.node_type
+                self.desc_label.setText(f"<b>{disp_name}</b> <span style='color: #888;'>({node_cls.node_type})</span>: {node_cls.description}")
         else:
             self.desc_label.setText("Select a transformer to see its description.")
 

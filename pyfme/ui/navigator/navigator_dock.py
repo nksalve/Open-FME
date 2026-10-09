@@ -178,7 +178,7 @@ class NavigatorWidget(QWidget):
         trans_item.setFont(0, QFont("Segoe UI", 9, QFont.Weight.DemiBold))
         root_ws.addChild(trans_item)
         for t in transformers:
-            t_child = QTreeWidgetItem([f"🔹  {t.node.name}"])
+            t_child = QTreeWidgetItem([f"🔹  {t.node.name} [{t.node.node_type}]"])
             t_child.setData(0, Qt.ItemDataRole.UserRole, t)
             trans_item.addChild(t_child)
 

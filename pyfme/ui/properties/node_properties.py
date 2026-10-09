@@ -61,7 +61,11 @@ class NodePropertiesWidget(QWidget):
             self.desc_label.setText("Select a node on the canvas to configure parameters.")
             return
 
-        self.header_title.setText(f"{node.name} ({node.node_type})")
+        disp_name = getattr(node, "get_display_name", lambda: node.node_type)()
+        if node.name and node.name != node.node_type and node.name != disp_name:
+            self.header_title.setText(f"{node.name} ({disp_name})")
+        else:
+            self.header_title.setText(f"{disp_name} ({node.node_type})")
         self.desc_label.setText(node.description)
 
         # 1. Custom Name input

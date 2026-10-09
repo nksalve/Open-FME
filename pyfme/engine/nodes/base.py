@@ -90,6 +90,38 @@ class ParameterDef:
         }
 
 
+SPECIAL_TOOL_NAMES = {
+    "2DForcer": "2D Forcer",
+    "3DForcer": "3D Forcer",
+    "GeoJSONReader": "GeoJSON Reader",
+    "GeoJSONWriter": "GeoJSON Writer",
+    "OGR2OGR": "OGR2OGR",
+}
+
+
+def format_tool_name(name: str, separator: str = " ") -> str:
+    """
+    Formats a tool/node class or type name into a clean, human-readable name.
+    e.g. 'CSVReader' -> 'CSV Reader' (or 'CSV-Reader' if separator='-')
+         'GeoJSONReader' -> 'GeoJSON Reader'
+         'VertexCreator' -> 'Vertex Creator'
+         'AreaOnAreaOverlayer' -> 'Area On Area Overlayer'
+    """
+    if not name:
+        return ""
+    if separator == " " and name in SPECIAL_TOOL_NAMES:
+        return SPECIAL_TOOL_NAMES[name]
+    elif separator == "-" and name in SPECIAL_TOOL_NAMES:
+        return SPECIAL_TOOL_NAMES[name].replace(" ", "-")
+
+    import re
+    # 1. Acronym followed by capitalized word: e.g. CSVReader -> CSV Reader
+    res = re.sub(r'([A-Z]+)([A-Z][a-z])', r'\1' + separator + r'\2', name)
+    # 2. Lowercase/digit followed by capital: e.g. AreaBuilder -> Area Builder, 2DForcer -> 2D Forcer
+    res = re.sub(r'([a-z\d])([A-Z])', r'\1' + separator + r'\2', res)
+    return res
+
+
 class BaseNode:
     """
     Abstract base class for all FME Readers, Transformers, and Writers.
@@ -97,12 +129,22 @@ class BaseNode:
     """
 
     node_type: str = "BaseNode"
+    display_name: Optional[str] = None
     category: NodeCategory = NodeCategory.ATTRIBUTE
     description: str = "Base processing node"
 
+    @classmethod
+    def get_display_name(cls, separator: str = " ") -> str:
+        """Return the formatted human-readable display name for this node (e.g. 'CSV Reader')."""
+        if cls.display_name:
+            if separator == "-":
+                return cls.display_name.replace(" ", "-")
+            return cls.display_name
+        return format_tool_name(cls.node_type, separator=separator)
+
     def __init__(self, node_id: Optional[str] = None, custom_name: Optional[str] = None):
         self.id = node_id or str(uuid.uuid4())
-        self.name = custom_name or self.node_type
+        self.name = custom_name or self.get_display_name()
         self.x: float = 0.0
         self.y: float = 0.0
         self.params: Dict[str, Any] = {}

@@ -1,0 +1,106 @@
+{
+  "name": "05_HTML_Reporting_Pipeline",
+  "version": "1.0.0",
+  "nodes": [
+    {
+      "id": "bcc11e38-b5b8-4307-8151-ad334fb07e51",
+      "node_type": "CSVReader",
+      "custom_name": "CSV Reader",
+      "position": {
+        "x": 80.0,
+        "y": 180.0
+      },
+      "params": {
+        "file_path": "C:\\Users\\Bisag\\Documents\\GitHub\\Open-FME\\sample_data\\customers.csv",
+        "delimiter": ",",
+        "has_header": true,
+        "ignore_errors": true
+      }
+    },
+    {
+      "id": "023160b0-5ea2-435c-a0bd-6f7c7a4c53aa",
+      "node_type": "Tester",
+      "custom_name": "Tester",
+      "position": {
+        "x": 340.0,
+        "y": 180.0
+      },
+      "params": {
+        "attribute": "annual_spend",
+        "operator": ">=",
+        "test_value": "25000"
+      }
+    },
+    {
+      "id": "021cec01-a115-4a2b-aab0-34dd2cf5afc8",
+      "node_type": "HTMLReportGenerator",
+      "custom_name": "HTML Report Generator",
+      "position": {
+        "x": 600.0,
+        "y": 180.0
+      },
+      "params": {
+        "report_title": "Top Customer Accounts Executive Briefing",
+        "style": "Modern Card Table"
+      }
+    },
+    {
+      "id": "553e4bde-86b2-4c3e-99d5-5085600ae9aa",
+      "node_type": "HTMLLayouter",
+      "custom_name": "HTML Layouter",
+      "position": {
+        "x": 860.0,
+        "y": 180.0
+      },
+      "params": {
+        "page_title": "Executive Financial Summary",
+        "output_file": "C:\\Users\\Bisag\\Documents\\GitHub\\Open-FME\\sample_data\\report.html"
+      }
+    }
+  ],
+  "connections": [
+    {
+      "from_node_id": "bcc11e38-b5b8-4307-8151-ad334fb07e51",
+      "from_port": "Output",
+      "to_node_id": "023160b0-5ea2-435c-a0bd-6f7c7a4c53aa",
+      "to_port": "Input"
+    },
+    {
+      "from_node_id": "023160b0-5ea2-435c-a0bd-6f7c7a4c53aa",
+      "from_port": "Passed",
+      "to_node_id": "021cec01-a115-4a2b-aab0-34dd2cf5afc8",
+      "to_port": "Input"
+    },
+    {
+      "from_node_id": "021cec01-a115-4a2b-aab0-34dd2cf5afc8",
+      "from_port": "Output",
+      "to_node_id": "553e4bde-86b2-4c3e-99d5-5085600ae9aa",
+      "to_port": "Input"
+    }
+  ],
+  "bookmarks": [
+    {
+      "title": "Business Intelligence & Report Generation",
+      "rect": [
+        50.0,
+        110.0,
+        1030.0,
+        240.0
+      ],
+      "color": "#5c6bc0",
+      "pos": [
+        50.0,
+        110.0
+      ]
+    }
+  ],
+  "annotations": [
+    {
+      "text": "Filters top revenue accounts and renders a polished web-ready HTML summary dashboard.",
+      "pos": [
+        340.0,
+        370.0
+      ]
+    }
+  ]
+}

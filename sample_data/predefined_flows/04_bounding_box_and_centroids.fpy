@@ -1,0 +1,114 @@
+{
+  "name": "04_Bounding_Box_and_Centroids",
+  "version": "1.0.0",
+  "nodes": [
+    {
+      "id": "ca84c352-ed37-404e-afac-002e0f712e95",
+      "node_type": "GeoJSONReader",
+      "custom_name": "GeoJSON Reader",
+      "position": {
+        "x": 80.0,
+        "y": 180.0
+      },
+      "params": {
+        "file_path": "C:\\Users\\Bisag\\Documents\\GitHub\\Open-FME\\sample_data\\regions.geojson"
+      }
+    },
+    {
+      "id": "f31fb6fe-9c90-4e06-a85d-30361b748a14",
+      "node_type": "BoundingBoxReplacer",
+      "custom_name": "Bounding Box Replacer",
+      "position": {
+        "x": 340.0,
+        "y": 180.0
+      },
+      "params": {}
+    },
+    {
+      "id": "aba57168-6c6c-4519-b6ba-87cf6b6d9c92",
+      "node_type": "CentroidExtractor",
+      "custom_name": "Centroid Extractor",
+      "position": {
+        "x": 600.0,
+        "y": 180.0
+      },
+      "params": {}
+    },
+    {
+      "id": "602590b4-7d20-43b9-8524-93bd6da42cde",
+      "node_type": "CoordinateExtractor",
+      "custom_name": "Coordinate Extractor",
+      "position": {
+        "x": 860.0,
+        "y": 180.0
+      },
+      "params": {
+        "x_attribute": "centroid_x",
+        "y_attribute": "centroid_y"
+      }
+    },
+    {
+      "id": "f68acf17-1564-4a38-bfca-9e3afc4b31e9",
+      "node_type": "GeoJSONWriter",
+      "custom_name": "GeoJSON Writer",
+      "position": {
+        "x": 1120.0,
+        "y": 180.0
+      },
+      "params": {
+        "file_path": "C:\\Users\\Bisag\\Documents\\GitHub\\Open-FME\\sample_data\\region_centroids.geojson"
+      }
+    }
+  ],
+  "connections": [
+    {
+      "from_node_id": "ca84c352-ed37-404e-afac-002e0f712e95",
+      "from_port": "Output",
+      "to_node_id": "f31fb6fe-9c90-4e06-a85d-30361b748a14",
+      "to_port": "Input"
+    },
+    {
+      "from_node_id": "f31fb6fe-9c90-4e06-a85d-30361b748a14",
+      "from_port": "Output",
+      "to_node_id": "aba57168-6c6c-4519-b6ba-87cf6b6d9c92",
+      "to_port": "Input"
+    },
+    {
+      "from_node_id": "aba57168-6c6c-4519-b6ba-87cf6b6d9c92",
+      "from_port": "Output",
+      "to_node_id": "602590b4-7d20-43b9-8524-93bd6da42cde",
+      "to_port": "Input"
+    },
+    {
+      "from_node_id": "602590b4-7d20-43b9-8524-93bd6da42cde",
+      "from_port": "Output",
+      "to_node_id": "f68acf17-1564-4a38-bfca-9e3afc4b31e9",
+      "to_port": "Input"
+    }
+  ],
+  "bookmarks": [
+    {
+      "title": "Geometric Transformation Pipeline",
+      "rect": [
+        50.0,
+        110.0,
+        1280.0,
+        240.0
+      ],
+      "color": "#6d4c41",
+      "pos": [
+        50.0,
+        110.0
+      ]
+    }
+  ],
+  "annotations": [
+    {
+      "text": "Computes rectangular bounding envelope, calculates center of gravity centroid, and appends X/Y coordinates.",
+      "pos": [
+        340.0,
+        370.0
+      ]
+    }
+  ]
+}

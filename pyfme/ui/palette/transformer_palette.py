@@ -84,7 +84,10 @@ class TransformerPaletteWidget(QWidget):
 
             matching_nodes = [
                 n for n in nodes
-                if not query or query in n.node_type.lower() or query in n.description.lower()
+                if not query
+                or query in n.node_type.lower()
+                or (hasattr(n, "get_display_name") and query in n.get_display_name().lower())
+                or query in n.description.lower()
             ]
 
             if not matching_nodes:
@@ -98,8 +101,15 @@ class TransformerPaletteWidget(QWidget):
 
             for n_cls in matching_nodes:
                 node_item = QTreeWidgetItem(cat_item)
-                node_item.setText(0, n_cls.node_type)
-                node_item.setToolTip(0, f"<div style='font-family: Segoe UI; font-size: 11px;'><b>{n_cls.node_type}</b><br><span style='color: #81d4fa;'>Category:</span> {cat_name}<br><br>{n_cls.description}</div>")
+                disp_name = n_cls.get_display_name() if hasattr(n_cls, "get_display_name") else n_cls.node_type
+                node_item.setText(0, disp_name)
+                node_item.setToolTip(
+                    0,
+                    f"<div style='font-family: Segoe UI; font-size: 11px;'>"
+                    f"<b>{disp_name}</b> <span style='color: #888;'>({n_cls.node_type})</span><br>"
+                    f"<span style='color: #81d4fa;'>Category:</span> {cat_name}<br><br>"
+                    f"{n_cls.description}</div>"
+                )
                 node_item.setData(0, Qt.ItemDataRole.UserRole, n_cls.node_type)
 
             cat_item.setExpanded(True if query else (cat in [NodeCategory.READER, NodeCategory.SPATIAL]))

@@ -2,7 +2,9 @@
 Expose and auto-register all built-in nodes.
 """
 
-from pyfme.engine.nodes.base import BaseNode, NodeCategory, Port, PortType, ParameterDef, ParameterType
+from pyfme.engine.nodes.base import (
+    BaseNode, NodeCategory, Port, PortType, ParameterDef, ParameterType, format_tool_name
+)
 import pyfme.engine.nodes.readers
 import pyfme.engine.nodes.transformers.attributes
 import pyfme.engine.nodes.transformers.spatial
@@ -29,4 +31,5 @@ __all__ = [
     "PortType",
     "ParameterDef",
     "ParameterType",
+    "format_tool_name",
 ]

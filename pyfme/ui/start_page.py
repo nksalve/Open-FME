@@ -204,13 +204,13 @@ class StartPageWidget(QWidget):
         return btn
 
     def _populate_recent_items(self):
-        samples = [
-            ("CommunityMapping_Routing.fpy", "sample_data/fme_community_mapping.fpy", "FME Community Mapping with Bookmarks & ShortestPathFinder"),
-            ("Automated_Customer_Pipeline.fpy", "sample_data/sample_workflow.fpy", "Spatial ETL: Customers CSV ➔ Bufferer ➔ GeoJSON"),
-        ]
-        for name, path, desc in samples:
-            item = QListWidgetItem(f"📁 {name}\n   {desc}")
-            item.setData(Qt.ItemDataRole.UserRole, os.path.abspath(path))
+        from pyfme.engine.predefined_flows import get_predefined_flows, ensure_predefined_flow_files
+        ensure_predefined_flow_files()
+        flows = get_predefined_flows()
+        for flow in flows:
+            item = QListWidgetItem(f"{flow['icon']}  {flow['title']}\n    [{flow['category']}] {flow['description']}")
+            item.setData(Qt.ItemDataRole.UserRole, flow["file_path"])
+            item.setToolTip(f"{flow['title']} - {flow['category']}\n{flow['file_path']}")
             self.recent_list.addItem(item)
 
     def _on_recent_double_clicked(self, item: QListWidgetItem):

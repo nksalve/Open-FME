@@ -147,10 +147,12 @@ class NodeItem(QGraphicsItem):
         title_font = QFont("Segoe UI", 9)
         title_font.setBold(True)
         painter.setFont(title_font)
+        metrics = painter.fontMetrics()
+        elided_title = metrics.elidedText(self.node.name, Qt.TextElideMode.ElideRight, int(self.WIDTH - 40))
         painter.drawText(
             QRectF(10, 0, self.WIDTH - 40, self.HEADER_HEIGHT),
             Qt.AlignmentFlag.AlignVCenter | Qt.AlignmentFlag.AlignLeft,
-            self.node.name,
+            elided_title,
         )
 
         # 4. Status Indicator Badge in Header

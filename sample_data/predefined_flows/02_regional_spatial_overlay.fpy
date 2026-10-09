@@ -1,0 +1,148 @@
+{
+  "name": "02_Regional_Spatial_Overlay",
+  "version": "1.0.0",
+  "nodes": [
+    {
+      "id": "ae4d4956-8911-4228-8812-c59e01c6d653",
+      "node_type": "CSVReader",
+      "custom_name": "CSV Reader",
+      "position": {
+        "x": 80.0,
+        "y": 120.0
+      },
+      "params": {
+        "file_path": "C:\\Users\\Bisag\\Documents\\GitHub\\Open-FME\\sample_data\\customers.csv",
+        "delimiter": ",",
+        "has_header": true,
+        "ignore_errors": true
+      }
+    },
+    {
+      "id": "3e806120-d734-4f7d-9f14-2b7294200d5d",
+      "node_type": "VertexCreator",
+      "custom_name": "Vertex Creator",
+      "position": {
+        "x": 340.0,
+        "y": 120.0
+      },
+      "params": {
+        "x_attribute": "lon",
+        "y_attribute": "lat",
+        "crs": "EPSG:4326"
+      }
+    },
+    {
+      "id": "3d8ed5b8-23ea-4021-a1d1-84f92ba2f48d",
+      "node_type": "GeoJSONReader",
+      "custom_name": "GeoJSON Reader",
+      "position": {
+        "x": 80.0,
+        "y": 320.0
+      },
+      "params": {
+        "file_path": "C:\\Users\\Bisag\\Documents\\GitHub\\Open-FME\\sample_data\\regions.geojson"
+      }
+    },
+    {
+      "id": "808a2747-9fbe-42c9-bb58-413b007038b2",
+      "node_type": "PointOnAreaOverlayer",
+      "custom_name": "Point On Area Overlayer",
+      "position": {
+        "x": 620.0,
+        "y": 200.0
+      },
+      "params": {}
+    },
+    {
+      "id": "324d5e41-9d52-4684-8c5c-e568498c99b9",
+      "node_type": "GeoJSONWriter",
+      "custom_name": "GeoJSON Writer",
+      "position": {
+        "x": 900.0,
+        "y": 200.0
+      },
+      "params": {
+        "file_path": "C:\\Users\\Bisag\\Documents\\GitHub\\Open-FME\\sample_data\\customers_by_region.geojson"
+      }
+    }
+  ],
+  "connections": [
+    {
+      "from_node_id": "ae4d4956-8911-4228-8812-c59e01c6d653",
+      "from_port": "Output",
+      "to_node_id": "3e806120-d734-4f7d-9f14-2b7294200d5d",
+      "to_port": "Input"
+    },
+    {
+      "from_node_id": "3e806120-d734-4f7d-9f14-2b7294200d5d",
+      "from_port": "Output",
+      "to_node_id": "808a2747-9fbe-42c9-bb58-413b007038b2",
+      "to_port": "Point"
+    },
+    {
+      "from_node_id": "3d8ed5b8-23ea-4021-a1d1-84f92ba2f48d",
+      "from_port": "Output",
+      "to_node_id": "808a2747-9fbe-42c9-bb58-413b007038b2",
+      "to_port": "Area"
+    },
+    {
+      "from_node_id": "808a2747-9fbe-42c9-bb58-413b007038b2",
+      "from_port": "Point",
+      "to_node_id": "324d5e41-9d52-4684-8c5c-e568498c99b9",
+      "to_port": "Input"
+    }
+  ],
+  "bookmarks": [
+    {
+      "title": "Stream A: Customer Point Layer",
+      "rect": [
+        60.0,
+        60.0,
+        500.0,
+        190.0
+      ],
+      "color": "#0288d1",
+      "pos": [
+        60.0,
+        60.0
+      ]
+    },
+    {
+      "title": "Stream B: Territory Boundary Layer",
+      "rect": [
+        60.0,
+        270.0,
+        280.0,
+        170.0
+      ],
+      "color": "#f57c00",
+      "pos": [
+        60.0,
+        270.0
+      ]
+    },
+    {
+      "title": "Point-in-Polygon Spatial Association",
+      "rect": [
+        580.0,
+        130.0,
+        520.0,
+        230.0
+      ],
+      "color": "#43a047",
+      "pos": [
+        580.0,
+        130.0
+      ]
+    }
+  ],
+  "annotations": [
+    {
+      "text": "Spatial point-in-polygon overlay: transfers region_name, zone_code, and target_growth to each customer point.",
+      "pos": [
+        580.0,
+        380.0
+      ]
+    }
+  ]
+}

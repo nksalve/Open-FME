@@ -1,0 +1,9 @@
+id,name,city,lat,lon,annual_spend,status
+107,Eta Robotics,San Francisco,37.7833,-122.4167,112000.0,active
+103,Gamma Energy,San Francisco,37.7749,-122.4194,98000.0,active
+105,Epsilon AI,Seattle,47.6101,-122.3421,87500.0,active
+108,Theta Solar,Portland,45.5231,-122.6765,64000.0,active
+101,Acme Corp,Seattle,47.6062,-122.3321,45200.5,active
+109,Iota Bio,Sacramento,38.5816,-121.4944,23000.0,active
+106,Zeta Health,San Jose,37.3382,-121.8863,15000.0,pending
+102,Beta Logistics,Portland,45.5152,-122.6784,12400.0,active

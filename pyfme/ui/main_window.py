@@ -301,9 +301,19 @@ class MainWindow(QMainWindow):
 
         file_menu.addSeparator()
 
-        sample_act = QAction("Load Sample Spatial Pipeline", self)
+        # Predefined Workflows Submenu
+        predefined_menu = file_menu.addMenu("📁 Predefined Workflows")
+        from pyfme.engine.predefined_flows import get_predefined_flows, ensure_predefined_flow_files
+        ensure_predefined_flow_files()
+        for flow in get_predefined_flows():
+            act = QAction(f"{flow['icon']}  {flow['title']}", self)
+            act.setToolTip(flow["description"])
+            act.triggered.connect(lambda checked=False, f_info=flow: self.load_predefined_flow(f_info))
+            predefined_menu.addAction(act)
+        predefined_menu.addSeparator()
+        sample_act = QAction("Load Default Spatial Sample", self)
         sample_act.triggered.connect(self.load_sample_workflow)
-        file_menu.addAction(sample_act)
+        predefined_menu.addAction(sample_act)
 
 
         file_menu.addSeparator()
@@ -916,6 +926,26 @@ class MainWindow(QMainWindow):
         self.central_tabs.setCurrentIndex(1)
         self.scene.add_annotation()
         self.navigator_widget.refresh()
+
+    def load_predefined_flow(self, flow_info: dict):
+        """Loads a predefined workflow template into the canvas with full visual styling."""
+        builder = flow_info.get("builder")
+        if callable(builder):
+            graph = builder()
+            self.graph = graph
+            self.scene.set_graph(self.graph)
+            self.current_file_path = flow_info.get("file_path", "")
+            ws_title = flow_info.get("title", graph.name)
+            self.setWindowTitle(f"open-FME Workbench - {ws_title}")
+            self.mark_flow_clean()
+            self._update_stats()
+            self.navigator_widget.refresh()
+            self.central_tabs.setCurrentIndex(1)
+            self.zoom_fit()
+            self.log_dock.raise_()
+            self.log_widget.append_log(f"Loaded Predefined Workflow: '{ws_title}'", "INFO")
+        elif flow_info.get("file_path") and os.path.exists(flow_info["file_path"]):
+            self.load_workspace_file(flow_info["file_path"])
 
     def load_sample_workflow(self):
         """Constructs or loads sample spatial ETL pipeline."""

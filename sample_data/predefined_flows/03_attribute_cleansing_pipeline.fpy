@@ -1,0 +1,127 @@
+{
+  "name": "03_Attribute_Cleansing_Pipeline",
+  "version": "1.0.0",
+  "nodes": [
+    {
+      "id": "a1e27958-6d15-45d7-b25e-296c064319aa",
+      "node_type": "CSVReader",
+      "custom_name": "CSV Reader",
+      "position": {
+        "x": 80.0,
+        "y": 180.0
+      },
+      "params": {
+        "file_path": "C:\\Users\\Bisag\\Documents\\GitHub\\Open-FME\\sample_data\\customers.csv",
+        "delimiter": ",",
+        "has_header": true,
+        "ignore_errors": true
+      }
+    },
+    {
+      "id": "9d843fce-e58f-4891-a5c1-3c7c5f04fe7d",
+      "node_type": "Tester",
+      "custom_name": "Tester",
+      "position": {
+        "x": 340.0,
+        "y": 180.0
+      },
+      "params": {
+        "attribute": "annual_spend",
+        "operator": ">",
+        "test_value": "0"
+      }
+    },
+    {
+      "id": "08c5c9e4-7e64-48dc-8847-54d034407347",
+      "node_type": "StringReplacer",
+      "custom_name": "String Replacer",
+      "position": {
+        "x": 600.0,
+        "y": 180.0
+      },
+      "params": {
+        "attribute": "status",
+        "search_value": "pending",
+        "replace_value": "under_review"
+      }
+    },
+    {
+      "id": "0250da43-b96a-4ed9-8925-68cb34b3bb8c",
+      "node_type": "Sorter",
+      "custom_name": "Sorter",
+      "position": {
+        "x": 860.0,
+        "y": 180.0
+      },
+      "params": {
+        "sort_by": "annual_spend",
+        "descending": true
+      }
+    },
+    {
+      "id": "68f2a6a0-aa68-4af6-8c82-ed0af9d37dea",
+      "node_type": "CSVWriter",
+      "custom_name": "CSV Writer",
+      "position": {
+        "x": 1120.0,
+        "y": 180.0
+      },
+      "params": {
+        "file_path": "C:\\Users\\Bisag\\Documents\\GitHub\\Open-FME\\sample_data\\cleansed_customers.csv",
+        "separator": ",",
+        "delimiter": ","
+      }
+    }
+  ],
+  "connections": [
+    {
+      "from_node_id": "a1e27958-6d15-45d7-b25e-296c064319aa",
+      "from_port": "Output",
+      "to_node_id": "9d843fce-e58f-4891-a5c1-3c7c5f04fe7d",
+      "to_port": "Input"
+    },
+    {
+      "from_node_id": "9d843fce-e58f-4891-a5c1-3c7c5f04fe7d",
+      "from_port": "Passed",
+      "to_node_id": "08c5c9e4-7e64-48dc-8847-54d034407347",
+      "to_port": "Input"
+    },
+    {
+      "from_node_id": "08c5c9e4-7e64-48dc-8847-54d034407347",
+      "from_port": "Output",
+      "to_node_id": "0250da43-b96a-4ed9-8925-68cb34b3bb8c",
+      "to_port": "Input"
+    },
+    {
+      "from_node_id": "0250da43-b96a-4ed9-8925-68cb34b3bb8c",
+      "from_port": "Output",
+      "to_node_id": "68f2a6a0-aa68-4af6-8c82-ed0af9d37dea",
+      "to_port": "Input"
+    }
+  ],
+  "bookmarks": [
+    {
+      "title": "Tabular ETL & Normalization Pipeline",
+      "rect": [
+        50.0,
+        110.0,
+        1280.0,
+        240.0
+      ],
+      "color": "#00897b",
+      "pos": [
+        50.0,
+        110.0
+      ]
+    }
+  ],
+  "annotations": [
+    {
+      "text": "Filters out invalid rows, updates status tokens, and orders customer accounts by revenue descending.",
+      "pos": [
+        340.0,
+        370.0
+      ]
+    }
+  ]
+}
