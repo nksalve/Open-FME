@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "nodes": [
     {
-      "id": "8c595b2c-5585-4bfd-8e52-e54bb7ea3e5e",
+      "id": "cfd4be13-a1d7-41ee-afe3-48358565501a",
       "node_type": "GeoJSONReader",
       "custom_name": "GeoJSON Reader",
       "position": {
@@ -15,7 +15,7 @@
       }
     },
     {
-      "id": "03e91e16-d534-4924-a0c9-8165ee16b33e",
+      "id": "5a5315a7-da99-42e1-85ac-eca067213c3c",
       "node_type": "BoundingBoxReplacer",
       "custom_name": "Bounding Box Replacer",
       "position": {
@@ -25,7 +25,7 @@
       "params": {}
     },
     {
-      "id": "c1b333ca-f510-48c5-9e94-02ce1d2254f6",
+      "id": "33beec25-e7f2-43fc-b939-86703364cb05",
       "node_type": "CentroidExtractor",
       "custom_name": "Centroid Extractor",
       "position": {
@@ -35,7 +35,7 @@
       "params": {}
     },
     {
-      "id": "ca722d2c-de3d-4985-80a4-97e5116ca31d",
+      "id": "d4d55b52-fd9f-478f-b6e8-bacad477b10a",
       "node_type": "CoordinateExtractor",
       "custom_name": "Coordinate Extractor",
       "position": {
@@ -48,7 +48,7 @@
       }
     },
     {
-      "id": "72913c00-e7ee-4908-b65c-bcd46caa64c8",
+      "id": "c561fcb7-c913-401d-ad73-152989467a04",
       "node_type": "GeoJSONWriter",
       "custom_name": "GeoJSON Writer",
       "position": {
@@ -62,27 +62,27 @@
   ],
   "connections": [
     {
-      "from_node_id": "8c595b2c-5585-4bfd-8e52-e54bb7ea3e5e",
+      "from_node_id": "cfd4be13-a1d7-41ee-afe3-48358565501a",
       "from_port": "Output",
-      "to_node_id": "03e91e16-d534-4924-a0c9-8165ee16b33e",
+      "to_node_id": "5a5315a7-da99-42e1-85ac-eca067213c3c",
       "to_port": "Input"
     },
     {
-      "from_node_id": "03e91e16-d534-4924-a0c9-8165ee16b33e",
+      "from_node_id": "5a5315a7-da99-42e1-85ac-eca067213c3c",
       "from_port": "Output",
-      "to_node_id": "c1b333ca-f510-48c5-9e94-02ce1d2254f6",
+      "to_node_id": "33beec25-e7f2-43fc-b939-86703364cb05",
       "to_port": "Input"
     },
     {
-      "from_node_id": "c1b333ca-f510-48c5-9e94-02ce1d2254f6",
+      "from_node_id": "33beec25-e7f2-43fc-b939-86703364cb05",
       "from_port": "Output",
-      "to_node_id": "ca722d2c-de3d-4985-80a4-97e5116ca31d",
+      "to_node_id": "d4d55b52-fd9f-478f-b6e8-bacad477b10a",
       "to_port": "Input"
     },
     {
-      "from_node_id": "ca722d2c-de3d-4985-80a4-97e5116ca31d",
+      "from_node_id": "d4d55b52-fd9f-478f-b6e8-bacad477b10a",
       "from_port": "Output",
-      "to_node_id": "72913c00-e7ee-4908-b65c-bcd46caa64c8",
+      "to_node_id": "c561fcb7-c913-401d-ad73-152989467a04",
       "to_port": "Input"
     }
   ],

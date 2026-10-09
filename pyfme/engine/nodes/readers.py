@@ -175,3 +175,53 @@ class ParquetReader(BaseNode):
         except Exception:
             df = pl.read_parquet(path)
             return {"Output": FeatureDataset.from_polars(df)}
+
+
+@NodeRegistry.register
+class GeoTIFFReader(BaseNode):
+    node_type = "GeoTIFFReader"
+    category = NodeCategory.READER
+    description = "Reads raster imagery, DEMs, and grid data from GeoTIFF / TIFF files (.tif, .tiff)."
+
+    @classmethod
+    def get_input_ports(cls) -> List[Port]:
+        return []
+
+    @classmethod
+    def get_output_ports(cls) -> List[Port]:
+        return [Port("Output", PortType.OUTPUT, "Loaded raster features and imagery")]
+
+    @classmethod
+    def get_parameter_defs(cls) -> List[ParameterDef]:
+        return [
+            ParameterDef("file_path", ParameterType.FILE_OPEN, default="", label="GeoTIFF / TIFF File Path", file_filter="GeoTIFF / Raster Files (*.tif *.tiff *.geotiff);;All Files (*.*)"),
+            ParameterDef("band_index", ParameterType.INTEGER, default=0, label="Band Index (0 for All Bands)"),
+        ]
+
+    def execute(self, inputs: Dict[str, FeatureDataset], params: Dict[str, Any], context=None) -> Dict[str, FeatureDataset]:
+        import os
+        path = params.get("file_path", "").strip()
+        if not path or not os.path.exists(path):
+            return {"Output": FeatureDataset.empty()}
+
+        import rasterio
+        band_idx = int(params.get("band_index", 0))
+
+        with rasterio.open(path) as src:
+            profile = src.profile.copy()
+            crs_str = src.crs.to_string() if src.crs else "EPSG:4326"
+            if band_idx > 0 and band_idx <= src.count:
+                data = src.read(band_idx)
+                profile["count"] = 1
+            else:
+                data = src.read()
+
+        return {"Output": FeatureDataset.from_raster(data, profile=profile, raster_path=path, crs=crs_str)}
+
+
+@NodeRegistry.register
+class RasterReader(GeoTIFFReader):
+    node_type = "RasterReader"
+    category = NodeCategory.READER
+    description = "Reads raster datasets, imagery, and DEM grids from GeoTIFF / TIFF and raster files."
+

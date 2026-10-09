@@ -95,6 +95,10 @@ SPECIAL_TOOL_NAMES = {
     "3DForcer": "3D Forcer",
     "GeoJSONReader": "GeoJSON Reader",
     "GeoJSONWriter": "GeoJSON Writer",
+    "GeoTIFFReader": "GeoTIFF Reader",
+    "GeoTIFFWriter": "GeoTIFF Writer",
+    "RasterReader": "Raster Reader",
+    "RasterWriter": "Raster Writer",
     "OGR2OGR": "OGR2OGR",
 }
 

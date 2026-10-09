@@ -203,6 +203,7 @@ open-fme-gui
 ### 📥 Readers (Inputs)
 | Node | Supported Formats | Description |
 | :--- | :--- | :--- |
+| `GeoTIFFReader` / `RasterReader` | `.tif`, `.tiff`, `.geotiff` | Reads raster datasets, DEMs, multispectral imagery, and grid elevations |
 | `CSVReader` | `.csv`, `.tsv`, `.txt` | High-speed tabular reader with automatic Polars schema inference |
 | `GeoJSONReader` | `.geojson`, `.json` | Reads standard vector features, geometries, and attribute properties |
 | `ShapefileReader` | `.shp` | ESRI Shapefile reader with coordinate reference system detection |
@@ -213,6 +214,7 @@ open-fme-gui
 ### 📤 Writers (Outputs)
 | Node | Supported Formats | Description |
 | :--- | :--- | :--- |
+| `GeoTIFFWriter` / `RasterWriter` | `.tif`, `.tiff` | Exports raster datasets, DEMs, or burned/vectorized spatial features to GeoTIFF |
 | `GeoJSONWriter` | `.geojson` | Exports vector geometries and attributes to GeoJSON |
 | `ShapefileWriter` | `.shp` | Exports spatial layers to ESRI Shapefile with attribute DBF table |
 | `CSVWriter` | `.csv` | High-speed tabular CSV export |

@@ -149,6 +149,11 @@ class SlopeCalculator(BaseNode):
 
     def execute(self, inputs: Dict[str, FeatureDataset], params: Dict[str, Any], context=None) -> Dict[str, FeatureDataset]:
         dem_path = params.get("dem_path", "").strip()
+        inp = inputs.get("Input")
+        if not dem_path and inp is not None:
+            if getattr(inp, "raster_path", None) and os.path.exists(inp.raster_path):
+                dem_path = inp.raster_path
+
         if not dem_path or not os.path.exists(dem_path):
             return {"Output": FeatureDataset.empty()}
 
@@ -179,8 +184,8 @@ class SlopeCalculator(BaseNode):
         if nodata is not None:
             slope[dem == nodata] = nodata
 
+        profile.update(dtype=rasterio.float32, count=1, nodata=nodata if nodata is not None else -9999.0)
         if out_path:
-            profile.update(dtype=rasterio.float32, count=1, nodata=nodata if nodata is not None else -9999.0)
             with rasterio.open(out_path, "w", **profile) as dst:
                 dst.write(slope.astype(np.float32), 1)
 
@@ -197,7 +202,7 @@ class SlopeCalculator(BaseNode):
             "height": [dem.shape[0]],
         })
 
-        return {"Output": FeatureDataset.from_polars(summary_df)}
+        return {"Output": FeatureDataset(df=summary_df, raster_data=slope.astype(np.float32), raster_profile=profile, raster_path=out_path, crs=profile.get("crs"))}
 
 
 @NodeRegistry.register
@@ -227,6 +232,11 @@ class AspectCalculator(BaseNode):
 
     def execute(self, inputs: Dict[str, FeatureDataset], params: Dict[str, Any], context=None) -> Dict[str, FeatureDataset]:
         dem_path = params.get("dem_path", "").strip()
+        inp = inputs.get("Input")
+        if not dem_path and inp is not None:
+            if getattr(inp, "raster_path", None) and os.path.exists(inp.raster_path):
+                dem_path = inp.raster_path
+
         if not dem_path or not os.path.exists(dem_path):
             return {"Output": FeatureDataset.empty()}
 
@@ -256,8 +266,8 @@ class AspectCalculator(BaseNode):
         if nodata is not None:
             aspect[dem == nodata] = -9999.0
 
+        profile.update(dtype=rasterio.float32, count=1, nodata=-9999.0)
         if out_path:
-            profile.update(dtype=rasterio.float32, count=1, nodata=-9999.0)
             with rasterio.open(out_path, "w", **profile) as dst:
                 dst.write(aspect.astype(np.float32), 1)
 
@@ -270,7 +280,7 @@ class AspectCalculator(BaseNode):
             "height": [dem.shape[0]],
         })
 
-        return {"Output": FeatureDataset.from_polars(summary_df)}
+        return {"Output": FeatureDataset(df=summary_df, raster_data=aspect.astype(np.float32), raster_profile=profile, raster_path=out_path, crs=profile.get("crs"))}
 
 
 @NodeRegistry.register
@@ -303,6 +313,11 @@ class HillshadeGenerator(BaseNode):
 
     def execute(self, inputs: Dict[str, FeatureDataset], params: Dict[str, Any], context=None) -> Dict[str, FeatureDataset]:
         dem_path = params.get("dem_path", "").strip()
+        inp = inputs.get("Input")
+        if not dem_path and inp is not None:
+            if getattr(inp, "raster_path", None) and os.path.exists(inp.raster_path):
+                dem_path = inp.raster_path
+
         if not dem_path or not os.path.exists(dem_path):
             return {"Output": FeatureDataset.empty()}
 
@@ -340,8 +355,8 @@ class HillshadeGenerator(BaseNode):
         if nodata is not None:
             hillshade[dem == nodata] = 0
 
+        profile.update(dtype=rasterio.uint8, count=1, nodata=0)
         if out_path:
-            profile.update(dtype=rasterio.uint8, count=1, nodata=0)
             with rasterio.open(out_path, "w", **profile) as dst:
                 dst.write(hillshade, 1)
 
@@ -355,7 +370,7 @@ class HillshadeGenerator(BaseNode):
             "height": [dem.shape[0]],
         })
 
-        return {"Output": FeatureDataset.from_polars(summary_df)}
+        return {"Output": FeatureDataset(df=summary_df, raster_data=hillshade, raster_profile=profile, raster_path=out_path, crs=profile.get("crs"))}
 
 
 @NodeRegistry.register

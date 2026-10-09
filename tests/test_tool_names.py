@@ -28,6 +28,10 @@ class TestToolNames(unittest.TestCase):
         self.assertEqual(format_tool_name("CSVWriter"), "CSV Writer")
         self.assertEqual(format_tool_name("GeoJSONReader"), "GeoJSON Reader")
         self.assertEqual(format_tool_name("GeoJSONWriter"), "GeoJSON Writer")
+        self.assertEqual(format_tool_name("GeoTIFFReader"), "GeoTIFF Reader")
+        self.assertEqual(format_tool_name("GeoTIFFWriter"), "GeoTIFF Writer")
+        self.assertEqual(format_tool_name("RasterReader"), "Raster Reader")
+        self.assertEqual(format_tool_name("RasterWriter"), "Raster Writer")
         self.assertEqual(format_tool_name("VertexCreator"), "Vertex Creator")
         self.assertEqual(format_tool_name("AreaOnAreaOverlayer"), "Area On Area Overlayer")
         self.assertEqual(format_tool_name("2DForcer"), "2D Forcer")
@@ -40,6 +44,8 @@ class TestToolNames(unittest.TestCase):
     def test_format_tool_name_dashes(self):
         self.assertEqual(format_tool_name("CSVReader", separator="-"), "CSV-Reader")
         self.assertEqual(format_tool_name("GeoJSONReader", separator="-"), "GeoJSON-Reader")
+        self.assertEqual(format_tool_name("GeoTIFFReader", separator="-"), "GeoTIFF-Reader")
+        self.assertEqual(format_tool_name("GeoTIFFWriter", separator="-"), "GeoTIFF-Writer")
         self.assertEqual(format_tool_name("VertexCreator", separator="-"), "Vertex-Creator")
         self.assertEqual(format_tool_name("AreaOnAreaOverlayer", separator="-"), "Area-On-Area-Overlayer")
 

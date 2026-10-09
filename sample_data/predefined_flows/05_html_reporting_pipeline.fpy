@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "nodes": [
     {
-      "id": "449e89a8-0bd0-43ee-be66-39c988af4419",
+      "id": "de035d19-07ac-4664-9780-2c21e9ba9697",
       "node_type": "CSVReader",
       "custom_name": "CSV Reader",
       "position": {
@@ -18,7 +18,7 @@
       }
     },
     {
-      "id": "92bcc675-4138-45f2-bf5e-cec0fbeae0a2",
+      "id": "f8446486-8b85-4e5a-b600-74eed02acef1",
       "node_type": "Tester",
       "custom_name": "Tester",
       "position": {
@@ -32,7 +32,7 @@
       }
     },
     {
-      "id": "009a8232-80f0-44a6-b613-afe544cab6f8",
+      "id": "1d67e071-1f10-4a39-9301-2109482311dd",
       "node_type": "HTMLReportGenerator",
       "custom_name": "HTML Report Generator",
       "position": {
@@ -45,7 +45,7 @@
       }
     },
     {
-      "id": "bb384c0c-f1a4-46ea-81a4-3476b005e2bf",
+      "id": "4af0e4f6-abc6-4aa1-8d39-23438b48a1c8",
       "node_type": "HTMLLayouter",
       "custom_name": "HTML Layouter",
       "position": {
@@ -60,21 +60,21 @@
   ],
   "connections": [
     {
-      "from_node_id": "449e89a8-0bd0-43ee-be66-39c988af4419",
+      "from_node_id": "de035d19-07ac-4664-9780-2c21e9ba9697",
       "from_port": "Output",
-      "to_node_id": "92bcc675-4138-45f2-bf5e-cec0fbeae0a2",
+      "to_node_id": "f8446486-8b85-4e5a-b600-74eed02acef1",
       "to_port": "Input"
     },
     {
-      "from_node_id": "92bcc675-4138-45f2-bf5e-cec0fbeae0a2",
+      "from_node_id": "f8446486-8b85-4e5a-b600-74eed02acef1",
       "from_port": "Passed",
-      "to_node_id": "009a8232-80f0-44a6-b613-afe544cab6f8",
+      "to_node_id": "1d67e071-1f10-4a39-9301-2109482311dd",
       "to_port": "Input"
     },
     {
-      "from_node_id": "009a8232-80f0-44a6-b613-afe544cab6f8",
+      "from_node_id": "1d67e071-1f10-4a39-9301-2109482311dd",
       "from_port": "Output",
-      "to_node_id": "bb384c0c-f1a4-46ea-81a4-3476b005e2bf",
+      "to_node_id": "4af0e4f6-abc6-4aa1-8d39-23438b48a1c8",
       "to_port": "Input"
     }
   ],

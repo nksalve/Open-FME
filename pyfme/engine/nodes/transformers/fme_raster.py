@@ -32,7 +32,7 @@ class RasterExtentsCoercer(BaseNode):
 
     @classmethod
     def get_input_ports(cls) -> List[Port]:
-        return []
+        return [Port("Input", PortType.INPUT, "Raster dataset (Optional)")]
 
     @classmethod
     def get_output_ports(cls) -> List[Port]:
@@ -45,7 +45,14 @@ class RasterExtentsCoercer(BaseNode):
         ]
 
     def execute(self, inputs: Dict[str, FeatureDataset], params: Dict[str, Any], context=None) -> Dict[str, FeatureDataset]:
+        inp = inputs.get("Input")
         path = params.get("raster_path", "").strip()
+        if not path and inp is not None:
+            if getattr(inp, "raster_path", None):
+                path = inp.raster_path
+            elif inp.has_raster():
+                return {"Output": FeatureDataset.from_geopandas(inp.to_geopandas())}
+
         if not path:
             return {"Output": FeatureDataset.empty()}
 
@@ -75,7 +82,7 @@ class RasterPropertyExtractor(BaseNode):
 
     @classmethod
     def get_input_ports(cls) -> List[Port]:
-        return []
+        return [Port("Input", PortType.INPUT, "Raster dataset (Optional)")]
 
     @classmethod
     def get_output_ports(cls) -> List[Port]:
@@ -88,7 +95,40 @@ class RasterPropertyExtractor(BaseNode):
         ]
 
     def execute(self, inputs: Dict[str, FeatureDataset], params: Dict[str, Any], context=None) -> Dict[str, FeatureDataset]:
+        inp = inputs.get("Input")
         path = params.get("raster_path", "").strip()
+        if not path and inp is not None:
+            if getattr(inp, "raster_path", None):
+                path = inp.raster_path
+            elif inp.has_raster():
+                prof = inp.raster_profile
+                data, _ = inp.get_raster()
+                w = prof.get("width", 0)
+                h = prof.get("height", 0)
+                if data is not None and (not w or not h):
+                    h = data.shape[-2]
+                    w = data.shape[-1]
+                b = inp.get_raster_bounds() or (0.0, 0.0, 1.0, 1.0)
+                trans = prof.get("transform")
+                dx = abs(trans.a if hasattr(trans, "a") else (trans[0] if trans else 1.0))
+                dy = abs(trans.e if hasattr(trans, "e") else (trans[4] if trans else 1.0))
+                bands = prof.get("count", 1 if data is None or data.ndim == 2 else data.shape[0])
+                df = pl.DataFrame({
+                    "raster_file": [inp.raster_path or "(In-memory raster)"],
+                    "width_pixels": [w],
+                    "height_pixels": [h],
+                    "cell_size_x": [float(dx)],
+                    "cell_size_y": [float(dy)],
+                    "minx": [b[0]],
+                    "miny": [b[1]],
+                    "maxx": [b[2]],
+                    "maxy": [b[3]],
+                    "num_bands": [bands],
+                    "crs": [str(inp.crs or "EPSG:4326")],
+                    "driver": [prof.get("driver", "GTiff")],
+                })
+                return {"Output": FeatureDataset.from_polars(df)}
+
         if not path:
             return {"Output": FeatureDataset.empty()}
 
@@ -125,7 +165,7 @@ class RasterStatisticsCalculator(BaseNode):
 
     @classmethod
     def get_input_ports(cls) -> List[Port]:
-        return []
+        return [Port("Input", PortType.INPUT, "Raster dataset (Optional)")]
 
     @classmethod
     def get_output_ports(cls) -> List[Port]:
@@ -138,7 +178,34 @@ class RasterStatisticsCalculator(BaseNode):
         ]
 
     def execute(self, inputs: Dict[str, FeatureDataset], params: Dict[str, Any], context=None) -> Dict[str, FeatureDataset]:
+        inp = inputs.get("Input")
         path = params.get("raster_path", "").strip()
+        if not path and inp is not None:
+            if getattr(inp, "raster_path", None):
+                path = inp.raster_path
+            elif inp.has_raster():
+                data, prof = inp.get_raster()
+                if data is not None:
+                    rows = []
+                    is_3d = (data.ndim == 3)
+                    count = data.shape[0] if is_3d else 1
+                    for b_idx in range(1, count + 1):
+                        band_arr = data[b_idx - 1] if is_3d else data
+                        nodata_val = prof.get("nodata")
+                        if nodata_val is not None:
+                            valid_data = band_arr[band_arr != nodata_val]
+                        else:
+                            valid_data = band_arr
+                        rows.append({
+                            "band": b_idx,
+                            "min": float(np.nanmin(valid_data)) if valid_data.size > 0 else None,
+                            "max": float(np.nanmax(valid_data)) if valid_data.size > 0 else None,
+                            "mean": float(np.nanmean(valid_data)) if valid_data.size > 0 else None,
+                            "std": float(np.nanstd(valid_data)) if valid_data.size > 0 else None,
+                            "valid_cells": int(valid_data.size),
+                        })
+                    return {"Output": FeatureDataset.from_polars(pl.DataFrame(rows))}
+
         if not path:
             return {"Output": FeatureDataset.empty()}
 
@@ -171,7 +238,7 @@ class RasterToPolygonCoercer(BaseNode):
 
     @classmethod
     def get_input_ports(cls) -> List[Port]:
-        return []
+        return [Port("Input", PortType.INPUT, "Raster dataset (Optional)")]
 
     @classmethod
     def get_output_ports(cls) -> List[Port]:
@@ -185,7 +252,28 @@ class RasterToPolygonCoercer(BaseNode):
         ]
 
     def execute(self, inputs: Dict[str, FeatureDataset], params: Dict[str, Any], context=None) -> Dict[str, FeatureDataset]:
+        inp = inputs.get("Input")
         path = params.get("raster_path", "").strip()
+        if not path and inp is not None:
+            if getattr(inp, "raster_path", None):
+                path = inp.raster_path
+            elif inp.has_raster():
+                data, prof = inp.get_raster()
+                if data is not None:
+                    band_idx = int(params.get("band_index", 1))
+                    is_3d = (data.ndim == 3)
+                    band_data = data[band_idx - 1] if is_3d else data
+                    crs = str(inp.crs or prof.get("crs") or "EPSG:4326")
+                    nodata = prof.get("nodata")
+                    mask = band_data != nodata if nodata is not None else None
+                    trans = prof.get("transform")
+                    polys, vals = [], []
+                    for geom_dict, val in shapes(band_data, mask=mask, transform=trans):
+                        polys.append(shape(geom_dict))
+                        vals.append(float(val))
+                    gdf = gpd.GeoDataFrame({"pixel_value": vals}, geometry=polys, crs=crs)
+                    return {"Output": FeatureDataset.from_geopandas(gdf)}
+
         if not path:
             return {"Output": FeatureDataset.empty()}
 

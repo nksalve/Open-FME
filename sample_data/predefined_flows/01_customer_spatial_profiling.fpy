@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "nodes": [
     {
-      "id": "2ea8c691-20e9-4936-af5c-c9a667b5a086",
+      "id": "f79f0665-4b6b-4772-8efa-7f6faf7f4cf9",
       "node_type": "CSVReader",
       "custom_name": "CSV Reader",
       "position": {
@@ -18,7 +18,7 @@
       }
     },
     {
-      "id": "b4bdc98f-9251-4098-9e8d-f7f367e0e7e6",
+      "id": "582dbb88-7b6c-4344-8310-a85c75fa7202",
       "node_type": "Tester",
       "custom_name": "Tester",
       "position": {
@@ -32,7 +32,7 @@
       }
     },
     {
-      "id": "2ea6be98-fa7d-415f-b02a-c57d1a00b30c",
+      "id": "1c48bfca-a93a-4b28-8061-ed4897585fa9",
       "node_type": "VertexCreator",
       "custom_name": "Vertex Creator",
       "position": {
@@ -46,7 +46,7 @@
       }
     },
     {
-      "id": "1fef7466-bb25-44c4-8149-f24ed43ff37a",
+      "id": "0777bd8b-5d26-4611-9f9c-df1f14c2df2c",
       "node_type": "Bufferer",
       "custom_name": "Bufferer",
       "position": {
@@ -59,7 +59,7 @@
       }
     },
     {
-      "id": "b102dc92-ddac-4355-abe5-f62583841621",
+      "id": "4a1ad37b-de43-4a9b-94c6-c53bdf8d9a51",
       "node_type": "GeoJSONWriter",
       "custom_name": "GeoJSON Writer",
       "position": {
@@ -73,27 +73,27 @@
   ],
   "connections": [
     {
-      "from_node_id": "2ea8c691-20e9-4936-af5c-c9a667b5a086",
+      "from_node_id": "f79f0665-4b6b-4772-8efa-7f6faf7f4cf9",
       "from_port": "Output",
-      "to_node_id": "b4bdc98f-9251-4098-9e8d-f7f367e0e7e6",
+      "to_node_id": "582dbb88-7b6c-4344-8310-a85c75fa7202",
       "to_port": "Input"
     },
     {
-      "from_node_id": "b4bdc98f-9251-4098-9e8d-f7f367e0e7e6",
+      "from_node_id": "582dbb88-7b6c-4344-8310-a85c75fa7202",
       "from_port": "Passed",
-      "to_node_id": "2ea6be98-fa7d-415f-b02a-c57d1a00b30c",
+      "to_node_id": "1c48bfca-a93a-4b28-8061-ed4897585fa9",
       "to_port": "Input"
     },
     {
-      "from_node_id": "2ea6be98-fa7d-415f-b02a-c57d1a00b30c",
+      "from_node_id": "1c48bfca-a93a-4b28-8061-ed4897585fa9",
       "from_port": "Output",
-      "to_node_id": "1fef7466-bb25-44c4-8149-f24ed43ff37a",
+      "to_node_id": "0777bd8b-5d26-4611-9f9c-df1f14c2df2c",
       "to_port": "Input"
     },
     {
-      "from_node_id": "1fef7466-bb25-44c4-8149-f24ed43ff37a",
+      "from_node_id": "0777bd8b-5d26-4611-9f9c-df1f14c2df2c",
       "from_port": "Output",
-      "to_node_id": "b102dc92-ddac-4355-abe5-f62583841621",
+      "to_node_id": "4a1ad37b-de43-4a9b-94c6-c53bdf8d9a51",
       "to_port": "Input"
     }
   ],

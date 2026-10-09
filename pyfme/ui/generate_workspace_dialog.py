@@ -15,6 +15,7 @@ from PyQt6.QtGui import QFont, QIcon
 
 
 FORMAT_READERS = {
+    "GeoTIFF / Raster (*.tif, *.tiff)": "GeoTIFFReader",
     "CSV (Comma Separated Value)": "CSVReader",
     "ESRI Shapefile (*.shp)": "ShapefileReader",
     "GeoJSON (*.geojson, *.json)": "GeoJSONReader",
@@ -23,6 +24,7 @@ FORMAT_READERS = {
 }
 
 FORMAT_WRITERS = {
+    "GeoTIFF / Raster (*.tif, *.tiff)": "GeoTIFFWriter",
     "ESRI Shapefile (*.shp)": "ShapefileWriter",
     "GeoJSON (*.geojson, *.json)": "GeoJSONWriter",
     "CSV (Comma Separated Value)": "CSVWriter",
@@ -172,7 +174,9 @@ class GenerateWorkspaceDialog(QDialog):
     def _browse_reader(self):
         fmt_text = self.reader_format_combo.currentText()
         filt = "All Files (*.*)"
-        if "Shapefile" in fmt_text:
+        if "GeoTIFF" in fmt_text or "Raster" in fmt_text:
+            filt = "GeoTIFF / Raster Files (*.tif *.tiff *.geotiff);;All Files (*.*)"
+        elif "Shapefile" in fmt_text:
             filt = "Shapefiles (*.shp);;All Files (*.*)"
         elif "GeoJSON" in fmt_text:
             filt = "GeoJSON (*.geojson *.json);;All Files (*.*)"
@@ -191,19 +195,32 @@ class GenerateWorkspaceDialog(QDialog):
                 base_dir = os.path.dirname(path)
                 name, _ = os.path.splitext(os.path.basename(path))
                 w_fmt = self.writer_format_combo.currentText()
-                ext = ".geojson" if "GeoJSON" in w_fmt else (".shp" if "Shapefile" in w_fmt else ".csv")
+                if "GeoTIFF" in w_fmt or "Raster" in w_fmt:
+                    ext = ".tif"
+                elif "GeoJSON" in w_fmt:
+                    ext = ".geojson"
+                elif "Shapefile" in w_fmt:
+                    ext = ".shp"
+                elif "Excel" in w_fmt:
+                    ext = ".xlsx"
+                elif "Parquet" in w_fmt:
+                    ext = ".parquet"
+                else:
+                    ext = ".csv"
                 self.writer_path_edit.setText(os.path.join(base_dir, f"{name}_output{ext}"))
 
     def _browse_writer(self):
         w_fmt = self.writer_format_combo.currentText()
         filt = "All Files (*.*)"
-        if "Shapefile" in w_fmt:
+        if "GeoTIFF" in w_fmt or "Raster" in w_fmt:
+            filt = "GeoTIFF Files (*.tif *.tiff);;All Files (*.*)"
+        elif "Shapefile" in w_fmt:
             filt = "Shapefiles (*.shp);;All Files (*.*)"
         elif "GeoJSON" in w_fmt:
             filt = "GeoJSON (*.geojson *.json);;All Files (*.*)"
         elif "CSV" in w_fmt:
             filt = "CSV Files (*.csv);;All Files (*.*)"
-        elif "Excel" in fmt:
+        elif "Excel" in w_fmt:
             filt = "Excel Files (*.xlsx);;All Files (*.*)"
         elif "Parquet" in w_fmt:
             filt = "Parquet Files (*.parquet);;All Files (*.*)"
@@ -281,12 +298,29 @@ class AddReaderDialog(QDialog):
         layout.addWidget(bbox)
 
     def _browse(self):
-        path, _ = QFileDialog.getOpenFileName(self, "Select Reader Dataset", "", "All Files (*.*)")
+        fmt_text = self.format_combo.currentText()
+        filt = "All Files (*.*)"
+        if "GeoTIFF" in fmt_text or "Raster" in fmt_text:
+            filt = "GeoTIFF / Raster Files (*.tif *.tiff *.geotiff);;All Files (*.*)"
+        elif "Shapefile" in fmt_text:
+            filt = "Shapefiles (*.shp);;All Files (*.*)"
+        elif "GeoJSON" in fmt_text:
+            filt = "GeoJSON (*.geojson *.json);;All Files (*.*)"
+        elif "CSV" in fmt_text:
+            filt = "CSV Files (*.csv);;All Files (*.*)"
+        elif "Excel" in fmt_text:
+            filt = "Excel Files (*.xlsx *.xls);;All Files (*.*)"
+        elif "Parquet" in fmt_text:
+            filt = "Parquet Files (*.parquet);;All Files (*.*)"
+        path, _ = QFileDialog.getOpenFileName(self, "Select Reader Dataset", "", filt)
         if path:
             self.path_edit.setText(path)
 
     def get_result(self) -> Tuple[str, str]:
         return FORMAT_READERS[self.format_combo.currentText()], self.path_edit.text().strip()
+
+    def get_data(self) -> Tuple[str, str]:
+        return self.get_result()
 
 
 class AddWriterDialog(QDialog):
@@ -324,9 +358,26 @@ class AddWriterDialog(QDialog):
         layout.addWidget(bbox)
 
     def _browse(self):
-        path, _ = QFileDialog.getSaveFileName(self, "Select Destination Dataset", "", "All Files (*.*)")
+        w_fmt = self.format_combo.currentText()
+        filt = "All Files (*.*)"
+        if "GeoTIFF" in w_fmt or "Raster" in w_fmt:
+            filt = "GeoTIFF Files (*.tif *.tiff);;All Files (*.*)"
+        elif "Shapefile" in w_fmt:
+            filt = "Shapefiles (*.shp);;All Files (*.*)"
+        elif "GeoJSON" in w_fmt:
+            filt = "GeoJSON (*.geojson *.json);;All Files (*.*)"
+        elif "CSV" in w_fmt:
+            filt = "CSV Files (*.csv);;All Files (*.*)"
+        elif "Excel" in w_fmt:
+            filt = "Excel Files (*.xlsx);;All Files (*.*)"
+        elif "Parquet" in w_fmt:
+            filt = "Parquet Files (*.parquet);;All Files (*.*)"
+        path, _ = QFileDialog.getSaveFileName(self, "Select Destination Dataset", self.path_edit.text() or "", filt)
         if path:
             self.path_edit.setText(path)
 
     def get_result(self) -> Tuple[str, str]:
         return FORMAT_WRITERS[self.format_combo.currentText()], self.path_edit.text().strip()
+
+    def get_data(self) -> Tuple[str, str]:
+        return self.get_result()

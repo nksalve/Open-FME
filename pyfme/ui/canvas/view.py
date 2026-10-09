@@ -235,9 +235,9 @@ class CanvasView(QGraphicsView):
                         if node:
                             node.set_param("file_path", file_path)
                     elif ext in (".tif", ".tiff", ".geotiff"):
-                        node = NodeRegistry.create("RasterExtentsCoercer")
+                        node = NodeRegistry.create("GeoTIFFReader")
                         if node:
-                            node.set_param("raster_path", file_path)
+                            node.set_param("file_path", file_path)
                     elif ext in (".fpy",):
                         # Load workspace safely
                         try:
