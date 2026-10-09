@@ -36,7 +36,7 @@ def create_customer_spatial_profiling_flow() -> WorkflowGraph:
     reader.set_param("file_path", csv_path)
     reader.set_param("delimiter", ",")
     reader.set_param("has_header", True)
-    reader.x, reader.y = 100.0, 180.0
+    reader.x, reader.y = 100.0, 160.0
     graph.add_node(reader)
 
     # 2. Tester (Filter status == 'active')
@@ -44,7 +44,7 @@ def create_customer_spatial_profiling_flow() -> WorkflowGraph:
     tester.set_param("attribute", "status")
     tester.set_param("operator", "=")
     tester.set_param("test_value", "active")
-    tester.x, tester.y = 360.0, 180.0
+    tester.x, tester.y = 360.0, 160.0
     graph.add_node(tester)
 
     # 3. Vertex Creator (lon, lat -> Point)
@@ -52,20 +52,20 @@ def create_customer_spatial_profiling_flow() -> WorkflowGraph:
     vertex.set_param("x_attribute", "lon")
     vertex.set_param("y_attribute", "lat")
     vertex.set_param("crs", "EPSG:4326")
-    vertex.x, vertex.y = 620.0, 140.0
+    vertex.x, vertex.y = 650.0, 160.0
     graph.add_node(vertex)
 
     # 4. Bufferer (0.25 degree radius)
     bufferer = NodeRegistry.create("Bufferer")
     bufferer.set_param("buffer_distance", 0.25)
     bufferer.set_param("resolution", 16)
-    bufferer.x, bufferer.y = 880.0, 140.0
+    bufferer.x, bufferer.y = 910.0, 160.0
     graph.add_node(bufferer)
 
     # 5. GeoJSON Writer
     writer = NodeRegistry.create("GeoJSONWriter")
     writer.set_param("file_path", out_path)
-    writer.x, writer.y = 1140.0, 140.0
+    writer.x, writer.y = 1190.0, 160.0
     graph.add_node(writer)
 
     # Connections
@@ -78,21 +78,27 @@ def create_customer_spatial_profiling_flow() -> WorkflowGraph:
     graph.bookmarks = [
         {
             "title": "1. Ingestion & Quality Filter",
-            "rect": [60.0, 100.0, 520.0, 240.0],
+            "x": 60.0,
+            "y": 90.0,
+            "width": 530.0,
+            "height": 230.0,
             "color": "#1976d2",
-            "pos": [60.0, 100.0],
         },
         {
             "title": "2. Geocoding & Buffer Analysis",
-            "rect": [580.0, 60.0, 520.0, 280.0],
+            "x": 610.0,
+            "y": 90.0,
+            "width": 530.0,
+            "height": 230.0,
             "color": "#7b1fa2",
-            "pos": [580.0, 60.0],
         },
         {
-            "title": "3. Spatial Export",
-            "rect": [1110.0, 60.0, 250.0, 280.0],
+            "title": "3. Spatial Output",
+            "x": 1160.0,
+            "y": 90.0,
+            "width": 260.0,
+            "height": 230.0,
             "color": "#388e3c",
-            "pos": [1110.0, 60.0],
         },
     ]
 
@@ -100,11 +106,17 @@ def create_customer_spatial_profiling_flow() -> WorkflowGraph:
     graph.annotations = [
         {
             "text": "Extracts customer addresses from CSV and isolates only 'active' status accounts.",
-            "pos": [100.0, 360.0],
+            "x": 80.0,
+            "y": 350.0,
+            "width": 260.0,
+            "height": 70.0,
         },
         {
             "text": "Converts lon/lat coordinates to WGS84 point geometries and calculates a 0.25-deg buffer area.",
-            "pos": [620.0, 360.0],
+            "x": 630.0,
+            "y": 350.0,
+            "width": 280.0,
+            "height": 70.0,
         },
     ]
 

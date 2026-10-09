@@ -14,7 +14,13 @@ It empowers GIS analysts, data engineers, and researchers to design, debug, and 
 
 ---
 
-## 📸 Overview & Architecture
+## 📸 Visual Pipeline Flowchart & Architecture
+
+<p align="center">
+  <img src="docs/images/flow_graph.png" alt="open-FME Visual Pipeline Flowchart" width="100%">
+</p>
+
+*Figure 1: Live visual DAG pipeline flowchart in open-FME — CSV Reader ➔ Tester ➔ Vertex Creator ➔ Bufferer ➔ GeoJSON Writer with live feature count badges, color-coded bookmarks, and sticky notes.*
 
 ```text
  ┌────────────────────────────────────────────────────────────────────────┐
@@ -105,6 +111,15 @@ It empowers GIS analysts, data engineers, and researchers to design, debug, and 
   python -m openfme.cli run workspace.fpy --param CSVReader.file_path="C:/data/input.csv"
   ```
 
+### 10. 💡 Interactive Hover Descriptions & Live Tooltips
+- **Canvas Nodes**: Hovering over any transformer on the canvas reveals a rich card showing:
+  - Transformer Name and Type
+  - Functional Category badge
+  - Detailed "What it does" description
+  - Live execution status, processed feature counts, and execution duration in seconds.
+- **Connection Ports**: Hovering over any input or output port reveals port direction and purpose (e.g. `Inside` vs `Outside`, `Matched` vs `NotMatched`).
+- **Transformer Gallery & Quick-Add**: Hovering over library items in the tree palette or browsing via `Spacebar` displays interactive descriptions and live preview cards.
+
 ---
 
 ## 📥 Installation
@@ -179,16 +194,7 @@ open-fme-gui
    - Watch features stream through the pipeline.
    - Click on the `Bufferer` node to view the resulting polygon geometries in the **Visual Data Inspector** map and table below!
 
----
-
-### 10. 💡 Interactive Hover Descriptions & Live Tooltips
-- **Canvas Nodes**: Hovering over any transformer on the canvas reveals a rich card showing:
-  - Transformer Name and Type
-  - Functional Category badge
-  - Detailed "What it does" description
-  - Live execution status, processed feature counts, and execution duration in seconds.
-- **Connection Ports**: Hovering over any input or output port reveals port direction and purpose (e.g. `Inside` vs `Outside`, `Matched` vs `NotMatched`).
-- **Transformer Gallery & Quick-Add**: Hovering over library items in the tree palette or browsing via `Spacebar` displays interactive descriptions and live preview cards.
+> 💡 **Instant Templates**: You can also load this exact pipeline directly by navigating to **File ➔ Predefined Workflows ➔ Customer Spatial Profiling & Buffering** or picking it from the **Start** tab! (Refer to the **[Visual Pipeline Flowchart](#-visual-pipeline-flowchart--architecture)** above for the complete visual diagram).
 
 ---
 

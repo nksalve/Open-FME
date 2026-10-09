@@ -3,12 +3,12 @@
   "version": "1.0.0",
   "nodes": [
     {
-      "id": "eb197105-c6e5-45f8-bd21-50e25a9814e5",
+      "id": "2ea8c691-20e9-4936-af5c-c9a667b5a086",
       "node_type": "CSVReader",
       "custom_name": "CSV Reader",
       "position": {
         "x": 100.0,
-        "y": 180.0
+        "y": 160.0
       },
       "params": {
         "file_path": "C:\\Users\\Bisag\\Documents\\GitHub\\Open-FME\\sample_data\\customers.csv",
@@ -18,12 +18,12 @@
       }
     },
     {
-      "id": "dc47c5a6-59bd-4684-932c-868e3c8a843c",
+      "id": "b4bdc98f-9251-4098-9e8d-f7f367e0e7e6",
       "node_type": "Tester",
       "custom_name": "Tester",
       "position": {
         "x": 360.0,
-        "y": 180.0
+        "y": 160.0
       },
       "params": {
         "attribute": "status",
@@ -32,12 +32,12 @@
       }
     },
     {
-      "id": "a94f1d6a-9bfd-4d43-acf7-d40e28416078",
+      "id": "2ea6be98-fa7d-415f-b02a-c57d1a00b30c",
       "node_type": "VertexCreator",
       "custom_name": "Vertex Creator",
       "position": {
-        "x": 620.0,
-        "y": 140.0
+        "x": 650.0,
+        "y": 160.0
       },
       "params": {
         "x_attribute": "lon",
@@ -46,12 +46,12 @@
       }
     },
     {
-      "id": "fcf1f395-4e1a-4354-943c-e0ce9fc0e323",
+      "id": "1fef7466-bb25-44c4-8149-f24ed43ff37a",
       "node_type": "Bufferer",
       "custom_name": "Bufferer",
       "position": {
-        "x": 880.0,
-        "y": 140.0
+        "x": 910.0,
+        "y": 160.0
       },
       "params": {
         "buffer_distance": 0.25,
@@ -59,12 +59,12 @@
       }
     },
     {
-      "id": "5c86d92f-bb06-4825-9f4b-7b89abb22462",
+      "id": "b102dc92-ddac-4355-abe5-f62583841621",
       "node_type": "GeoJSONWriter",
       "custom_name": "GeoJSON Writer",
       "position": {
-        "x": 1140.0,
-        "y": 140.0
+        "x": 1190.0,
+        "y": 160.0
       },
       "params": {
         "file_path": "C:\\Users\\Bisag\\Documents\\GitHub\\Open-FME\\sample_data\\active_customers_buffered.geojson"
@@ -73,88 +73,70 @@
   ],
   "connections": [
     {
-      "from_node_id": "eb197105-c6e5-45f8-bd21-50e25a9814e5",
+      "from_node_id": "2ea8c691-20e9-4936-af5c-c9a667b5a086",
       "from_port": "Output",
-      "to_node_id": "dc47c5a6-59bd-4684-932c-868e3c8a843c",
+      "to_node_id": "b4bdc98f-9251-4098-9e8d-f7f367e0e7e6",
       "to_port": "Input"
     },
     {
-      "from_node_id": "dc47c5a6-59bd-4684-932c-868e3c8a843c",
+      "from_node_id": "b4bdc98f-9251-4098-9e8d-f7f367e0e7e6",
       "from_port": "Passed",
-      "to_node_id": "a94f1d6a-9bfd-4d43-acf7-d40e28416078",
+      "to_node_id": "2ea6be98-fa7d-415f-b02a-c57d1a00b30c",
       "to_port": "Input"
     },
     {
-      "from_node_id": "a94f1d6a-9bfd-4d43-acf7-d40e28416078",
+      "from_node_id": "2ea6be98-fa7d-415f-b02a-c57d1a00b30c",
       "from_port": "Output",
-      "to_node_id": "fcf1f395-4e1a-4354-943c-e0ce9fc0e323",
+      "to_node_id": "1fef7466-bb25-44c4-8149-f24ed43ff37a",
       "to_port": "Input"
     },
     {
-      "from_node_id": "fcf1f395-4e1a-4354-943c-e0ce9fc0e323",
+      "from_node_id": "1fef7466-bb25-44c4-8149-f24ed43ff37a",
       "from_port": "Output",
-      "to_node_id": "5c86d92f-bb06-4825-9f4b-7b89abb22462",
+      "to_node_id": "b102dc92-ddac-4355-abe5-f62583841621",
       "to_port": "Input"
     }
   ],
   "bookmarks": [
     {
       "title": "1. Ingestion & Quality Filter",
-      "rect": [
-        60.0,
-        100.0,
-        520.0,
-        240.0
-      ],
-      "color": "#1976d2",
-      "pos": [
-        60.0,
-        100.0
-      ]
+      "x": 60.0,
+      "y": 90.0,
+      "width": 530.0,
+      "height": 230.0,
+      "color": "#1976d2"
     },
     {
       "title": "2. Geocoding & Buffer Analysis",
-      "rect": [
-        580.0,
-        60.0,
-        520.0,
-        280.0
-      ],
-      "color": "#7b1fa2",
-      "pos": [
-        580.0,
-        60.0
-      ]
+      "x": 610.0,
+      "y": 90.0,
+      "width": 530.0,
+      "height": 230.0,
+      "color": "#7b1fa2"
     },
     {
-      "title": "3. Spatial Export",
-      "rect": [
-        1110.0,
-        60.0,
-        250.0,
-        280.0
-      ],
-      "color": "#388e3c",
-      "pos": [
-        1110.0,
-        60.0
-      ]
+      "title": "3. Spatial Output",
+      "x": 1160.0,
+      "y": 90.0,
+      "width": 260.0,
+      "height": 230.0,
+      "color": "#388e3c"
     }
   ],
   "annotations": [
     {
       "text": "Extracts customer addresses from CSV and isolates only 'active' status accounts.",
-      "pos": [
-        100.0,
-        360.0
-      ]
+      "x": 80.0,
+      "y": 350.0,
+      "width": 260.0,
+      "height": 70.0
     },
     {
       "text": "Converts lon/lat coordinates to WGS84 point geometries and calculates a 0.25-deg buffer area.",
-      "pos": [
-        620.0,
-        360.0
-      ]
+      "x": 630.0,
+      "y": 350.0,
+      "width": 280.0,
+      "height": 70.0
     }
   ]
 }

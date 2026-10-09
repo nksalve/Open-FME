@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "nodes": [
     {
-      "id": "a1e27958-6d15-45d7-b25e-296c064319aa",
+      "id": "d49f65f2-cbf9-4fd4-9bac-19f9ab9e27e5",
       "node_type": "CSVReader",
       "custom_name": "CSV Reader",
       "position": {
@@ -18,7 +18,7 @@
       }
     },
     {
-      "id": "9d843fce-e58f-4891-a5c1-3c7c5f04fe7d",
+      "id": "c8bbc811-ab41-4874-bbce-addcb23e50f3",
       "node_type": "Tester",
       "custom_name": "Tester",
       "position": {
@@ -32,7 +32,7 @@
       }
     },
     {
-      "id": "08c5c9e4-7e64-48dc-8847-54d034407347",
+      "id": "bb6c8791-08e6-45db-9574-51654b1d6ecd",
       "node_type": "StringReplacer",
       "custom_name": "String Replacer",
       "position": {
@@ -46,7 +46,7 @@
       }
     },
     {
-      "id": "0250da43-b96a-4ed9-8925-68cb34b3bb8c",
+      "id": "3522a33b-81ef-4c87-9bcf-b55b61894588",
       "node_type": "Sorter",
       "custom_name": "Sorter",
       "position": {
@@ -59,7 +59,7 @@
       }
     },
     {
-      "id": "68f2a6a0-aa68-4af6-8c82-ed0af9d37dea",
+      "id": "bedba6a6-1eff-49b1-9352-070eb2c5f094",
       "node_type": "CSVWriter",
       "custom_name": "CSV Writer",
       "position": {
@@ -75,27 +75,27 @@
   ],
   "connections": [
     {
-      "from_node_id": "a1e27958-6d15-45d7-b25e-296c064319aa",
+      "from_node_id": "d49f65f2-cbf9-4fd4-9bac-19f9ab9e27e5",
       "from_port": "Output",
-      "to_node_id": "9d843fce-e58f-4891-a5c1-3c7c5f04fe7d",
+      "to_node_id": "c8bbc811-ab41-4874-bbce-addcb23e50f3",
       "to_port": "Input"
     },
     {
-      "from_node_id": "9d843fce-e58f-4891-a5c1-3c7c5f04fe7d",
+      "from_node_id": "c8bbc811-ab41-4874-bbce-addcb23e50f3",
       "from_port": "Passed",
-      "to_node_id": "08c5c9e4-7e64-48dc-8847-54d034407347",
+      "to_node_id": "bb6c8791-08e6-45db-9574-51654b1d6ecd",
       "to_port": "Input"
     },
     {
-      "from_node_id": "08c5c9e4-7e64-48dc-8847-54d034407347",
+      "from_node_id": "bb6c8791-08e6-45db-9574-51654b1d6ecd",
       "from_port": "Output",
-      "to_node_id": "0250da43-b96a-4ed9-8925-68cb34b3bb8c",
+      "to_node_id": "3522a33b-81ef-4c87-9bcf-b55b61894588",
       "to_port": "Input"
     },
     {
-      "from_node_id": "0250da43-b96a-4ed9-8925-68cb34b3bb8c",
+      "from_node_id": "3522a33b-81ef-4c87-9bcf-b55b61894588",
       "from_port": "Output",
-      "to_node_id": "68f2a6a0-aa68-4af6-8c82-ed0af9d37dea",
+      "to_node_id": "bedba6a6-1eff-49b1-9352-070eb2c5f094",
       "to_port": "Input"
     }
   ],
